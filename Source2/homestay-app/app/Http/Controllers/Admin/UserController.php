@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Property;
+use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -76,5 +78,35 @@ class UserController extends Controller
         $user->delete();
 
         return redirect()->route('admin.users.index')->with('success', 'User berhasil dihapus.');
+    }
+
+    public function indexByRole($role)
+    {
+        $users = User::where('role', $role)->get();
+        return view('admin.users.index_by_role', compact('users', 'role'));
+    }
+
+    public function detailOwner($id)
+    {
+        $user = User::findOrFail($id);
+
+        // Ambil semua properti milik owner ini
+        $properties = Property::where('owner_id', $user->id)->get();
+
+        // Hitung total properti
+        $totalProperties = $properties->count();
+
+        // Hitung total pendapatan dari semua reservasi yang statusnya selesai
+        $totalIncome = Reservation::whereIn('property_id', $properties->pluck('id'))
+            ->where('status', 'selesai')
+            ->sum('total_price');
+
+        // Kirim semua variabel ke blade
+        return view('admin.users.detail_owner', compact(
+            'user',
+            'properties',
+            'totalProperties',
+            'totalIncome'
+        ));
     }
 }

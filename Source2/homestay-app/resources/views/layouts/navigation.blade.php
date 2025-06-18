@@ -24,12 +24,6 @@
                 </div>
 
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.index')">
-                        {{ __('Users') }}
-                    </x-nav-link>
-                </div>
-
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('customer.properties.index')" :active="request()->routeIs('customer.properties.index')">
                         {{ __('Daftar Properti Customer') }}
                     </x-nav-link>
@@ -38,6 +32,12 @@
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('customer.reservations.history')" :active="request()->routeIs('reservations.history')">
                         {{ __('Riwayat Reservasi') }}
+                    </x-nav-link>
+                </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('resepsionis.properties.index')" :active="request()->routeIs('resepsionis.properties.index')">
+                        {{ __('Daftar Properti Resepsionis') }}
                     </x-nav-link>
                 </div>
             </div>
