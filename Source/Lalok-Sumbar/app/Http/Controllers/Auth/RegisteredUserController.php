@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 
 namespace App\Http\Controllers\Auth;
@@ -53,3 +54,5 @@ class RegisteredUserController extends Controller
         return redirect(route('dashboard', absolute: false));
     }
 }
+=======
+>>>>>>> 765a4fc4999d851864e1c4d0b6864c19e9eb8198

@@ -1,9 +1,25 @@
 <x-app-layout>
+<<<<<<< HEAD
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Penginapan Bukittinggi') }}
         </h2>
     </x-slot>
+=======
+<<<<<<< HEAD
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Dashboard') }}
+        </h2>
+    </x-slot>
+=======
+    {{-- <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Dashboard') }}
+        </h2>
+    </x-slot> --}}
+>>>>>>> 44538d1b47f2b3204f4552cb58676d525095cd3c
+>>>>>>> 765a4fc4999d851864e1c4d0b6864c19e9eb8198
 
     {{-- <!-- Button Filter -->
     <div class="flex justify-end px-4 mb-4">
