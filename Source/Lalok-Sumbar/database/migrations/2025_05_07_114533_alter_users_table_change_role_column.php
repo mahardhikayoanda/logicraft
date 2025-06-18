@@ -12,8 +12,13 @@ return new class extends Migration
     public function up(): void
 {
     Schema::table('users', function (Blueprint $table) {
-        $table->enum('role', ['Customer', 'Owner'])->default('Customer');
-    });
+    $table->dropColumn('role'); // buang kolom lama
+});
+
+Schema::table('users', function (Blueprint $table) {
+    $table->enum('role', ['Customer', 'Owner'])->default('Customer');
+});
+
 }
 
 
