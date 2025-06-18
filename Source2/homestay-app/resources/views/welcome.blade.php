@@ -24,7 +24,7 @@
 
         <!-- Left: Illustration -->
         <div class="w-full md:w-1/2 animate-fade-in">
-            <img src="{{ url('rb-logo.jpg') }}" alt="LalokSumbar Logo" class="w-full h-auto drop-shadow-md rounded-lg">
+            <img src="{{ url('rb-logo.png') }}" alt="LalokSumbar Logo" class="w-full h-auto drop-shadow-md rounded-lg">
         </div>
 
         <!-- Right: Content -->
