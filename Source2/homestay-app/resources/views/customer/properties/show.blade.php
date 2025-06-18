@@ -1,5 +1,6 @@
 <x-app-layout>
     <div class="max-w-4xl mx-auto p-4">
+
         {{-- Judul Properti --}}
         <h2 class="text-2xl font-bold text-gray-800 mb-4">{{ $property->name }}</h2>
 
@@ -15,31 +16,75 @@
             </div>
         @endif
 
-        {{-- Deskripsi --}}
+        {{-- Deskripsi Properti --}}
         <div class="bg-white p-4 rounded-lg shadow mb-6">
             <div class="mb-4">
-                <label>Deskripsi</label>
+                <label class="font-semibold text-gray-600">Deskripsi</label>
                 <p class="text-gray-700">{{ $property->description }}</p>
             </div>
             <div class="mb-4">
-                <label>Lokasi</label>
+                <label class="font-semibold text-gray-600">Lokasi</label>
                 <p class="text-gray-700">{{ $property->location }}</p>
             </div>
             <div class="mb-4">
-                <label>Fasilitas</label>
+                <label class="font-semibold text-gray-600">Fasilitas</label>
                 <p class="text-gray-700">{{ $property->facilities }}</p>
             </div>
+            <div class="mb-4">
+                <label class="font-semibold text-gray-600">Harga per malam</label>
+                <p class="text-green-700 font-semibold">Rp {{ number_format($property->price_per_night) }}</p>
+            </div>
+        </div>
 
-            <p class="mt-4 text-lg font-semibold text-green-700">
-                Harga: <span class="text-black">Rp {{ number_format($property->price_per_night) }}</span> / malam
-            </p>
+        {{-- Form Cek Ketersediaan --}}
+        <form method="GET" action="" class="bg-white p-4 rounded-lg shadow mb-6">
+            <h3 class="text-lg font-bold mb-4 text-gray-700">Cek Ketersediaan</h3>
 
-            <button type="submit">
-                <a href="{{ route('customer.reservations.create', $property->id) }}"
-                    class="bg-green-500 text-white px-4 py-2 rounded mt-4 inline-block">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="check_in_date" class="block text-sm font-medium text-gray-700">Tanggal Check-in</label>
+                    <input type="date" id="check_in_date" name="check_in_date" value="{{ request('check_in_date') }}"
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+                </div>
+                <div>
+                    <label for="check_out_date" class="block text-sm font-medium text-gray-700">Tanggal
+                        Check-out</label>
+                    <input type="date" id="check_out_date" name="check_out_date"
+                        value="{{ request('check_out_date') }}"
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+                </div>
+            </div>
+
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded mt-4">Cek Ketersediaan</button>
+        </form>
+
+        {{-- Logika untuk Menentukan Ketersediaan --}}
+        @php
+            $isBooked = false;
+            if (request()->filled('check_in_date') && request()->filled('check_out_date')) {
+                $checkIn = request('check_in_date');
+                $checkOut = request('check_out_date');
+                $isBooked = $property->isBookedOn($checkIn, $checkOut);
+            }
+        @endphp
+
+        {{-- Tampilkan Tombol atau Pesan --}}
+        @if (request()->filled('check_in_date') && request()->filled('check_out_date'))
+            @if (!$isBooked)
+                <a href="{{ route('customer.reservations.create', [
+                    'property' => $property->id,
+                    'check_in_date' => request('check_in_date'),
+                    'check_out_date' => request('check_out_date'),
+                ]) }}"
+                    class="bg-green-500 text-white px-4 py-2 rounded inline-block">
                     Pesan Sekarang
                 </a>
-        </div>
+            @else
+                <div class="bg-red-100 text-red-700 px-4 py-2 rounded">
+                    Properti tidak tersedia pada tanggal tersebut.
+                </div>
+            @endif
+        @endif
 
     </div>
 </x-app-layout>

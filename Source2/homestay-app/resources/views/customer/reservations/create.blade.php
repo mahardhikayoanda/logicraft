@@ -1,4 +1,11 @@
 <x-app-layout>
+
+    @if (session('error'))
+        <div class="bg-red-100 text-red-600 p-3 mb-4 rounded">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <x-slot name="header">
         <h2 class="text-xl font-semibold">Reservasi Properti: {{ $property->name }}</h2>
     </x-slot>

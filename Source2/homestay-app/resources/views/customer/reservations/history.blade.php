@@ -86,6 +86,15 @@
                                     class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm">
                                     Ulas
                                 </a>
+                                <form action="{{ route('customer.reservations.destroy', $reservation->id) }}"
+                                    method="POST" onsubmit="return confirm('Yakin ingin menghapus reservasi ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        class="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1 rounded text-sm">
+                                        Hapus Reservasi
+                                    </button>
+                                </form>
                             </div>
                         @endif
                     </div>

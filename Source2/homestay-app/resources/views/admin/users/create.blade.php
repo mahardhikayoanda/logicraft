@@ -1,41 +1,59 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Tambah User
-        </h2>
-    </x-slot>
+@extends('layouts.admin')
 
-    <div class="py-4 px-6">
-        <form action="{{ route('admin.users.store') }}" method="POST">
-            @csrf
+@section('content')
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">Tambah User</h1>
 
-            <div class="mb-4">
-                <label>Nama</label>
-                <input type="text" name="name" class="w-full border px-3 py-2" required>
-            </div>
+    <form action="{{ route('admin.users.store') }}" method="POST" class="bg-white p-6 rounded-lg shadow-md w-full max-w-xl">
+        @csrf
 
-            <div class="mb-4">
-                <label>Email</label>
-                <input type="email" name="email" class="w-full border px-3 py-2" required>
-            </div>
+        {{-- Nama --}}
+        <div class="mb-4">
+            <label for="name" class="block font-semibold mb-1">Nama</label>
+            <input type="text" id="name" name="name" class="w-full border border-gray-300 px-3 py-2 rounded"
+                required value="{{ old('name') }}">
+            @error('name')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
 
-            <div class="mb-4">
-                <label>Password</label>
-                <input type="password" name="password" class="w-full border px-3 py-2" required>
-            </div>
+        {{-- Email --}}
+        <div class="mb-4">
+            <label for="email" class="block font-semibold mb-1">Email</label>
+            <input type="email" id="email" name="email" class="w-full border border-gray-300 px-3 py-2 rounded"
+                required value="{{ old('email') }}">
+            @error('email')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
 
-            <div class="mb-4">
-                <label>Role</label>
-                <select name="role" class="w-full border px-3 py-2" required>
-                    <option value="admin">Admin</option>
-                    <option value="owner">Owner</option>
-                    <option value="resepsionis">Resepsionis</option>
-                    <option value="customer">Customer</option>
-                </select>
-            </div>
+        {{-- Password --}}
+        <div class="mb-4">
+            <label for="password" class="block font-semibold mb-1">Password</label>
+            <input type="password" id="password" name="password" class="w-full border border-gray-300 px-3 py-2 rounded"
+                required>
+            @error('password')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
 
-            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Simpan</button>
-            <a href="{{ route('admin.users.index') }}" class="text-gray-700 ml-4">Batal</a>
-        </form>
-    </div>
-</x-app-layout>
+        {{-- Role --}}
+        <div class="mb-6">
+            <label for="role" class="block font-semibold mb-1">Role</label>
+            <select id="role" name="role" class="w-full border border-gray-300 px-3 py-2 rounded" required>
+                <option value="" disabled selected>Pilih Role</option>
+                <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Admin</option>
+                <option value="owner" {{ old('role') === 'owner' ? 'selected' : '' }}>Owner</option>
+                <option value="receptionist" {{ old('role') === 'receptionist' ? 'selected' : '' }}>Resepsionis</option>
+                <option value="customer" {{ old('role') === 'customer' ? 'selected' : '' }}>Customer</option>
+            </select>
+            @error('role')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="flex items-center">
+            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Simpan</button>
+            <a href="{{ route('admin.users.index') }}" class="ml-4 text-gray-600 hover:underline">Batal</a>
+        </div>
+    </form>
+@endsection
