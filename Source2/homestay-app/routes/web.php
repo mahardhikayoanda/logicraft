@@ -10,6 +10,25 @@ use App\Http\Controllers\Customer\ReservationController;
 use App\Http\Controllers\Customer\CustomerPropertyController;
 use App\Http\Middleware\OwnerMiddleware;
 use App\Http\Middleware\CustomerMiddleware;
+use App\Http\Controllers\LokasiController;
+// routes/web.php
+use Illuminate\Support\Facades\Http;
+
+Route::get('/api/cari-lokasi', function () {
+    $query = request('q');
+    if (!$query) return response()->json(['error' => 'No query'], 400);
+
+    $response = Http::withHeaders([
+        'User-Agent' => 'YourAppName/1.0 (your@email.com)'
+    ])->get('https://nominatim.openstreetmap.org/search', [
+        'q' => $query,
+        'format' => 'json'
+    ]);
+
+    return $response->json();
+});
+
+Route::post('/lokasi', [LokasiController::class, 'store'])->name('lokasi.store');
 
 Route::get('/', function () {
     return view('welcome');
