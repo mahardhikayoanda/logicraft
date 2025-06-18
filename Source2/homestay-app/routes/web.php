@@ -14,14 +14,14 @@ use App\Http\Controllers\Resepsionis\PropertyController as ReceptionistPropertyC
 use App\Http\Middleware\ResepsionisMiddleware;
 use App\Http\Controllers\DashboardRedirectController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Owner\DashboardController as OwnerDashboardController;
+use App\Http\Controllers\Owner\ReportController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-
 Route::get('/dashboard', [DashboardRedirectController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
-
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -49,6 +49,8 @@ Route::middleware(['auth', AdminMiddleware::class])->prefix('admin/users')->name
 });
 
 Route::middleware(['auth', OwnerMiddleware::class])->prefix('owner')->name('owner.')->group(function () {
+    Route::get('/owner/dashboard', [OwnerDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/report', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/properties', [PropertyController::class, 'index'])->name('properties.index');
     Route::get('/properties/create', [PropertyController::class, 'create'])->name('properties.create');
     Route::post('/properties', [PropertyController::class, 'store'])->name('properties.store');
