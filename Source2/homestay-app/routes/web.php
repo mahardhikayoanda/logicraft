@@ -15,6 +15,7 @@ use App\Http\Middleware\ResepsionisMiddleware;
 use App\Http\Controllers\DashboardRedirectController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Owner\DashboardController as OwnerDashboardController;
+use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
 use App\Http\Controllers\Owner\ReportController;
 
 Route::get('/', function () {
@@ -66,6 +67,7 @@ Route::middleware(['auth', OwnerMiddleware::class])->prefix('owner')->name('owne
 });
 
 Route::middleware(['auth', CustomerMiddleware::class])->prefix('customer')->name('customer.')->group(function () {
+    Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->name('dashboard');
     Route::get('/properties', [CustomerPropertyController::class, 'index'])->name('properties.index');
     Route::get('/properties/{property}', [CustomerPropertyController::class, 'show'])->name('properties.show');
     Route::get('/reservations/create/{property}', [ReservationController::class, 'create'])->name('reservations.create');
