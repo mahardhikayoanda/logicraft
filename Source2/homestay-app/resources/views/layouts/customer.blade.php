@@ -17,8 +17,8 @@
             </div>
             <div class="space-x-6">
                 <a href="{{ route('customer.dashboard') }}" class="text-gray-700 hover:text-blue-600">Beranda</a>
-                <a href="{{ route('customer.reservations.history') }}"
-                    class="text-gray-700 hover:text-blue-600">Riwayat</a>
+                <a href="{{ route('customer.reservations.history') }}" class="text-gray-700 hover:text-blue-600">Riwayat</a>
+                <a href="{{ route('customer.wishlist.index') }}" class="text-gray-700 hover:text-blue-600">Wishlist</a>
                 <form method="POST" action="{{ route('logout') }}" class="inline">
                     @csrf
                     <button type="submit" class="text-gray-700 hover:text-red-600">Logout</button>
