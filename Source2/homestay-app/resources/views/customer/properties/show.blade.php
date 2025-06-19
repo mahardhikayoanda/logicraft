@@ -3,7 +3,7 @@
 @section('title', $property->name)
 
 @section('content')
-    <div class="max-w-4xl mx-auto p-4"> 
+    <div class="max-w-4xl mx-auto p-4">
 
         {{-- Gambar Properti --}}
         @if ($property->images->count())
@@ -34,6 +34,34 @@
             <div class="mb-4">
                 <label class="font-semibold text-gray-600">Harga per malam</label>
                 <p class="text-green-700 font-semibold">Rp {{ number_format($property->price_per_night) }}</p>
+            </div>
+        </div>
+
+        {{-- Peta Lokasi Properti --}}
+        <div class="bg-white p-4 rounded-lg shadow mb-6">
+            <h3 class="text-xl font-semibold mb-4">📍 Lokasi Properti</h3>
+
+            <div class="mb-4">
+                <label class="block mb-1 font-medium">Cari Lokasi:</label>
+                <input type="text" id="searchInput" class="border p-2 w-full rounded"
+                    placeholder="Contoh: Monas, Jakarta">
+                <button onclick="cariLokasi()" type="button"
+                    class="mt-2 bg-blue-500 text-white px-3 py-1 rounded">Cari</button>
+            </div>
+
+            <div id="map" class="w-full h-64 rounded mb-4"></div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="latitude" class="block font-medium">Latitude</label>
+                    <input type="text" id="latitude" name="latitude" class="border p-2 w-full rounded"
+                        value="{{ $property->latitude ?? '' }}">
+                </div>
+                <div>
+                    <label for="longitude" class="block font-medium">Longitude</label>
+                    <input type="text" id="longitude" name="longitude" class="border p-2 w-full rounded"
+                        value="{{ $property->longitude ?? '' }}">
+                </div>
             </div>
         </div>
 
@@ -87,31 +115,6 @@
             @endif
         @endif
 
-        {{-- Peta Lokasi Properti --}}
-        <div class="bg-white p-4 rounded-lg shadow mb-6">
-            <h3 class="text-xl font-semibold mb-4">📍 Lokasi Properti</h3>
-
-            <div class="mb-4">
-                <label class="block mb-1 font-medium">Cari Lokasi:</label>
-                <input type="text" id="searchInput" class="border p-2 w-full rounded" placeholder="Contoh: Monas, Jakarta">
-                <button onclick="cariLokasi()" type="button" class="mt-2 bg-blue-500 text-white px-3 py-1 rounded">Cari</button>
-            </div>
-
-            <div id="map" class="w-full h-64 rounded mb-4"></div>
-
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label for="latitude" class="block font-medium">Latitude</label>
-                    <input type="text" id="latitude" name="latitude" class="border p-2 w-full rounded"
-                        value="{{ $property->latitude ?? '' }}">
-                </div>
-                <div>
-                    <label for="longitude" class="block font-medium">Longitude</label>
-                    <input type="text" id="longitude" name="longitude" class="border p-2 w-full rounded"
-                        value="{{ $property->longitude ?? '' }}">
-                </div>
-            </div>
-        </div>
     </div>
 
     {{-- Leaflet CSS & JS --}}
@@ -119,8 +122,11 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
-        let map = L.map('map').setView([{{ $property->latitude ?? '-6.200000' }}, {{ $property->longitude ?? '106.816666' }}], 13);
-        let marker = L.marker([{{ $property->latitude ?? '-6.200000' }}, {{ $property->longitude ?? '106.816666' }}]).addTo(map);
+        let map = L.map('map').setView([{{ $property->latitude ?? '-6.200000' }},
+            {{ $property->longitude ?? '106.816666' }}
+        ], 13);
+        let marker = L.marker([{{ $property->latitude ?? '-6.200000' }}, {{ $property->longitude ?? '106.816666' }}])
+            .addTo(map);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors'
