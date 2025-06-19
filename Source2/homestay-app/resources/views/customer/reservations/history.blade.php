@@ -50,7 +50,7 @@
                                     Edit
                                 </a>
 
-                                <a href="{{ route('customer.reservations.edit', $reservation->id) }}"
+                                <a href="{{ route('customer.reservations.payment.form', $reservation->id) }}"
                                     class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">
                                     Bayar
                                 </a>
