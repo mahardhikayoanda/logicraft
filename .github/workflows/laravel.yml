@@ -35,14 +35,25 @@ jobs:
         php-version: '8.2'
         extensions: mbstring, bcmath, pdo_mysql
 
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
     - name: Change to Laravel directory
       run: cd Source2/homestay-app && ls -la
 
     - name: Copy .env
       run: cp Source2/homestay-app/.env.example Source2/homestay-app/.env
 
-    - name: Install Dependencies
+    - name: Install PHP Dependencies
       run: cd Source2/homestay-app && composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+    - name: Install NPM Dependencies
+      run: cd Source2/homestay-app && npm install
+
+    - name: Build Frontend Assets
+      run: cd Source2/homestay-app && npm run build
 
     - name: Generate Application Key
       run: cd Source2/homestay-app && php artisan key:generate
@@ -62,4 +73,3 @@ jobs:
 
     - name: Run Tests (skip)
       run: echo "Skipping tests until test environment is ready."
-
