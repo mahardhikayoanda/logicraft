@@ -184,7 +184,8 @@
                             {{-- Property Image --}}
                             <div class="relative h-48 rounded-t-xl overflow-hidden">
                                 @if($property->images && count($property->images) > 0)
-                                    <img src="{{ Storage::url($property->images[0]) }}" alt="{{ $property->name }}" class="w-full h-full object-cover">
+                                    
+                                    <img src="{{ Storage::url($property->images->first()->path) }}" alt="{{ $property->name }}" class="w-full h-full object-cover">
                                 @else
                                     <div class="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
                                         <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 20 20">

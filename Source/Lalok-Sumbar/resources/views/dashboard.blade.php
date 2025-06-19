@@ -1,8 +1,13 @@
 <x-app-layout>
 <<<<<<< HEAD
     <x-slot name="header">
+<<<<<<< HEAD
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Dashboard') }}
+=======
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Penginapan Bukittinggi') }}
+>>>>>>> 151ce2a0cf6529a4f777dc8c567187fc9bcb4912
         </h2>
     </x-slot>
 =======

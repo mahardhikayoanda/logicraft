@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('property_images', function (Blueprint $table) {
             $table->id();
             $table->foreignId('property_id')->constrained()->onDelete('cascade');
-            $table->string('image_path');
+            $table->string('path'); // UBAH dari 'image_path' ke 'path'
+            $table->string('filename'); // TAMBAH kolom filename
             $table->string('alt_text')->nullable();
             $table->boolean('is_primary')->default(false);
             $table->timestamps();

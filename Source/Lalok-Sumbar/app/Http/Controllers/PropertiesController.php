@@ -75,57 +75,63 @@ class PropertiesController extends Controller
      * Store a newly created property in storage.
      */
     public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'address' => 'required|string|max:500',
-            'city' => 'required|string|max:100',
-            'state' => 'nullable|string|max:100',
-            'postal_code' => 'nullable|string|max:20',
-            'type' => 'required|in:' . implode(',', array_keys(Property::TYPES)),
-            'status' => 'required|in:' . implode(',', array_keys(Property::STATUSES)),
-            'rental_status' => 'required|in:' . implode(',', array_keys(Property::RENTAL_STATUSES)),
-            'bedrooms' => 'nullable|integer|min:0|max:20',
-            'bathrooms' => 'nullable|integer|min:0|max:20',
-            'area' => 'nullable|numeric|min:0',
-            'price' => 'required|numeric|min:0',
-            'year_built' => 'nullable|integer|min:1800|max:' . (date('Y') + 5),
-            'monthly_rent' => 'nullable|numeric|min:0',
-            'estimated_value' => 'nullable|numeric|min:0',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // 5MB max
-            'amenities' => 'nullable|array',
-            'utilities_included' => 'nullable|array',
-            'pet_policy' => 'nullable|boolean',
-            'smoking_policy' => 'nullable|boolean',
-            'availability_date' => 'nullable|date|after_or_equal:today'
-        ]);
+{
+    $validator = Validator::make($request->all(), [
+        'name' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'address' => 'required|string|max:500',
+        'city' => 'required|string|max:100',
+        'state' => 'nullable|string|max:100',
+        'postal_code' => 'nullable|string|max:20',
+        'type' => 'required|in:' . implode(',', array_keys(Property::TYPES)),
+        'status' => 'required|in:' . implode(',', array_keys(Property::STATUSES)),
+        'rental_status' => 'required|in:' . implode(',', array_keys(Property::RENTAL_STATUSES)),
+        'bedrooms' => 'nullable|integer|min:0|max:20',
+        'bathrooms' => 'nullable|integer|min:0|max:20',
+        'area' => 'nullable|numeric|min:0',
+        'price' => 'required|numeric|min:0',
+        'year_built' => 'nullable|integer|min:1800|max:' . (date('Y') + 5),
+        'monthly_rent' => 'nullable|numeric|min:0',
+        'estimated_value' => 'nullable|numeric|min:0',
+        'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // 5MB max
+        'amenities' => 'nullable|array',
+        'utilities_included' => 'nullable|array',
+        'pet_policy' => 'nullable|boolean',
+        'smoking_policy' => 'nullable|boolean',
+        'availability_date' => 'nullable|date|after_or_equal:today'
+    ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-
-        $propertyData = $request->except(['images', '_token']);
-        $propertyData['owner_id'] = Auth::id();
-
-        // Handle image uploads
-        if ($request->hasFile('images')) {
-            $images = [];
-            foreach ($request->file('images') as $image) {
-                $filename = Str::random(40) . '.' . $image->getClientOriginalExtension();
-                $path = $image->storeAs('properties', $filename, 'public');
-                $images[] = $path;
-            }
-            $propertyData['images'] = $images;
-        }
-
-        $property = Property::create($propertyData);
-
-        return redirect()->route('owner.properties')
-            ->with('success', 'Properti berhasil ditambahkan!');
+    if ($validator->fails()) {
+        return redirect()->back()
+            ->withErrors($validator)
+            ->withInput();
     }
+
+    // HAPUS 'images' dari propertyData
+    $propertyData = $request->except(['images', '_token']);
+    $propertyData['owner_id'] = Auth::id();
+
+    // CREATE PROPERTY DULU (TANPA IMAGES)
+    $property = Property::create($propertyData);
+
+    // BARU HANDLE IMAGE UPLOADS KE TABEL PropertyImage
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $index => $image) {
+            $filename = Str::random(40) . '.' . $image->getClientOriginalExtension();
+            $path = $image->storeAs('properties', $filename, 'public');
+            
+            // SIMPAN KE TABEL PropertyImage
+            $property->images()->create([
+                'path' => $path,
+                'filename' => $filename,
+                'is_primary' => $index === 0, // Foto pertama sebagai primary
+                'alt_text' => $property->name . ' - Image ' . ($index + 1)
+            ]);
+        }
+    }
+
+    return redirect()->route('owner.properties')->with('success', 'Properti berhasil ditambahkan!');
+}
 
     /**
      * Display the specified property.
@@ -133,7 +139,6 @@ class PropertiesController extends Controller
     public function show($id)
     {
         $property = Property::where('owner_id', Auth::id())
-            ->with(['currentTenant', 'leases', 'transactions', 'maintenanceRequests'])
             ->findOrFail($id);
 
         return view('owner.properties.show', compact('property'));
