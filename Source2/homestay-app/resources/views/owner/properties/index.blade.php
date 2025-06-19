@@ -1,47 +1,47 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-xl font-semibold">Daftar Properti</h2>
-    </x-slot>
+@extends('layouts.owner')
 
-    <div class="py-4 px-6">
-        <a href="{{ route('owner.properties.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">Tambah Properti</a>
+@section('content')
+    <h2 class="text-xl font-semibold mb-4">Daftar Properti</h2>
 
-        @if(session('success'))
-            <div class="text-green-600 mt-4">{{ session('success') }}</div>
-        @endif
+    <a href="{{ route('owner.properties.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">Tambah Properti</a>
 
-        <table class="w-full mt-4 border">
-            <thead>
-                <tr class="bg-gray-100">
-                    <th class="px-4 py-2 border">Nama</th>
-                    <th class="px-4 py-2 border">Deskripsi</th>
-                    <th class="px-4 py-2 border">Harga</th>
-                    <th class="px-4 py-2 border">Alamat</th>
-                    <th class="px-4 py-2 border">Fasilitas</th>
-                    <th class="px-4 py-2 border">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($properties as $property)
-                    <tr>
-                        <td class="border px-4 py-2">{{ $property->name }}</td>
-                        <td class="border px-4 py-2">{{ $property->description }}</td>
-                        <td class="border px-4 py-2">Rp {{ number_format($property->price_per_night) }}</td>
-                        <td class="border px-4 py-2">{{ $property->location }}</td>
-                        <td class="border px-4 py-2">{{ $property->facilities }}</td>
-                        <td class="border px-4 py-2">
-                            <a href="{{ route('owner.properties.show', $property) }}" class="text-yellow-600">Detail</a> |
-                            <form action="{{ route('owner.properties.destroy', $property) }}" method="POST" class="inline" onsubmit="return confirm('Yakin hapus?')">
-                                @csrf
-                                @method('DELETE')
-                                <button class="text-red-600">Hapus</button>
-                            </form>
-                        </td>
-                    </tr>
-                @empty
-                    <tr><td colspan="4" class="text-center py-4">Belum ada properti.</td></tr>
-                @endforelse
-            </tbody>
-        </table>
+    @if (session('success'))
+        <div class="text-green-600 mt-4">{{ session('success') }}</div>
+    @endif
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6">
+        @forelse($properties as $property)
+            <div class="bg-white shadow rounded-lg overflow-hidden">
+                @if ($property->images->count())
+                    <img src="{{ asset('storage/' . $property->images->first()->image_path) }}" alt="{{ $property->name }}"
+                        class="w-full h-48 object-cover">
+                @else
+                    <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">Tidak ada gambar
+                    </div>
+                @endif
+
+                <div class="p-4">
+                    <h3 class="text-lg font-bold">{{ $property->name }}</h3>
+                    <p class="text-gray-600 text-sm mt-1 mb-2">{{ Str::limit($property->description, 80) }}</p>
+                    <p class="text-blue-600 font-semibold">Rp {{ number_format($property->price_per_night) }}</p>
+
+                    <div class="mt-4 flex justify-between items-center">
+                        <a href="{{ route('owner.properties.show', $property) }}"
+                            class="text-sm text-yellow-600 hover:underline">Detail</a>
+
+                        <form action="{{ route('owner.properties.destroy', $property) }}" method="POST"
+                            onsubmit="return confirm('Yakin hapus?')">
+                            @csrf
+                            @method('DELETE')
+                            <button class="text-sm text-red-600 hover:underline">Hapus</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @empty
+            <div class="col-span-full text-center text-gray-500 py-8">
+                Belum ada properti.
+            </div>
+        @endforelse
     </div>
-</x-app-layout>
+@endsection

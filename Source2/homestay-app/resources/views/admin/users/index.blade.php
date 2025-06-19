@@ -1,13 +1,12 @@
+@extends('layouts.admin')
 
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Manajemen User
-        </h2>
-    </x-slot>
+@section('content')
+    <div x-data="{ openModal: false }">
+        <h2 class="text-2xl font-bold text-gray-800 leading-tight mb-4">Manajemen User</h2>
 
-    <div class="py-4 px-6">
-        <a href="{{ route('admin.users.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">Tambah User</a>
+        <button @click="openModal = true" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            <a href="{{ route('admin.users.create') }}">Tambah User</a>
+        </button>
 
         @if (session('success'))
             <div class="text-green-600 mt-4">{{ session('success') }}</div>
@@ -47,4 +46,4 @@
             </tbody>
         </table>
     </div>
-</x-app-layout>
+@endsection

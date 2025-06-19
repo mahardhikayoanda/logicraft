@@ -33,6 +33,22 @@ class ReservationController extends Controller
             'jumlah_tamu' => 'required|integer|min:1',
         ]);
 
+        $conflict = Reservation::where('property_id', $property->id)
+            ->where('status', '!=', 'canceled') // Abaikan yang sudah dibatalkan
+            ->where(function ($query) use ($request) {
+                $query->whereBetween('check_in_date', [$request->check_in_date, $request->check_out_date])
+                    ->orWhereBetween('check_out_date', [$request->check_in_date, $request->check_out_date])
+                    ->orWhere(function ($query2) use ($request) {
+                        $query2->where('check_in_date', '<=', $request->check_in_date)
+                            ->where('check_out_date', '>=', $request->check_out_date);
+                    });
+            })
+            ->exists();
+
+        if ($conflict) {
+            return redirect()->back()->withInput()->with('error', 'Properti ini sudah dibooking pada tanggal tersebut.');
+        }
+
         $checkIn = Carbon::parse($request->check_in_date);
         $checkOut = Carbon::parse($request->check_out_date);
         $days = $checkIn->diffInDays($checkOut);
@@ -133,7 +149,7 @@ class ReservationController extends Controller
         }
 
         $reservation->delete();
-        
+
         $reservation->property->update([
             'is_available' => true
         ]);
