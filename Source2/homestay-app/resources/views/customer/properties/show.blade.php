@@ -1,8 +1,9 @@
-<x-app-layout>
-    <div class="max-w-4xl mx-auto p-4">
+@extends('layouts.customer')
 
-        {{-- Judul Properti --}}
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">{{ $property->name }}</h2>
+@section('title', $property->name)
+
+@section('content')
+    <div class="max-w-4xl mx-auto p-4"> 
 
         {{-- Gambar Properti --}}
         @if ($property->images->count())
@@ -47,15 +48,15 @@
                         class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
                 </div>
                 <div>
-                    <label for="check_out_date" class="block text-sm font-medium text-gray-700">Tanggal
-                        Check-out</label>
-                    <input type="date" id="check_out_date" name="check_out_date"
-                        value="{{ request('check_out_date') }}"
+                    <label for="check_out_date" class="block text-sm font-medium text-gray-700">Tanggal Check-out</label>
+                    <input type="date" id="check_out_date" name="check_out_date" value="{{ request('check_out_date') }}"
                         class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
                 </div>
             </div>
 
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded mt-4">Cek Ketersediaan</button>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded mt-4 hover:bg-blue-600">
+                Cek Ketersediaan
+            </button>
         </form>
 
         {{-- Logika untuk Menentukan Ketersediaan --}}
@@ -76,7 +77,7 @@
                     'check_in_date' => request('check_in_date'),
                     'check_out_date' => request('check_out_date'),
                 ]) }}"
-                    class="bg-green-500 text-white px-4 py-2 rounded inline-block">
+                    class="bg-green-500 text-white px-4 py-2 rounded inline-block hover:bg-green-600">
                     Pesan Sekarang
                 </a>
             @else
@@ -85,6 +86,5 @@
                 </div>
             @endif
         @endif
-
     </div>
-</x-app-layout>
+@endsection

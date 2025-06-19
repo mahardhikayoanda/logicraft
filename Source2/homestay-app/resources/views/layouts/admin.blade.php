@@ -9,6 +9,7 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
 
 <body class="flex bg-gray-50 min-h-screen">
