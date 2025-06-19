@@ -1,35 +1,58 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Http;
+
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Middleware\AdminMiddleware;
-use App\Http\Controllers\Owner\PropertyController;
-use App\Http\Controllers\Owner\PropertyImageController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Customer\ReservationController;
 use App\Http\Controllers\Customer\CustomerPropertyController;
-use App\Http\Middleware\OwnerMiddleware;
-use App\Http\Middleware\CustomerMiddleware;
-use App\Http\Controllers\Resepsionis\PropertyController as ReceptionistPropertyController;
-use App\Http\Middleware\ResepsionisMiddleware;
-use App\Http\Controllers\DashboardRedirectController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Owner\DashboardController as OwnerDashboardController;
 use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
+use App\Http\Controllers\DashboardRedirectController;
+use App\Http\Controllers\LokasiController;
+use App\Http\Controllers\Owner\DashboardController as OwnerDashboardController;
+use App\Http\Controllers\Owner\PropertyController;
+use App\Http\Controllers\Owner\PropertyImageController;
 use App\Http\Controllers\Owner\ReportController;
+use App\Http\Controllers\Resepsionis\PropertyController as ReceptionistPropertyController;
+use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\CustomerMiddleware;
+use App\Http\Middleware\OwnerMiddleware;
+use App\Http\Middleware\ResepsionisMiddleware;
 
+// Route pencarian lokasi (OpenStreetMap API)
+Route::get('/api/cari-lokasi', function () {
+    $query = request('q');
+    if (!$query) return response()->json(['error' => 'No query'], 400);
+
+    $response = Http::withHeaders([
+        'User-Agent' => 'YourAppName/1.0 (your@email.com)'
+    ])->get('https://nominatim.openstreetmap.org/search', [
+        'q' => $query,
+        'format' => 'json'
+    ]);
+
+    return $response->json();
+});
+
+Route::post('/lokasi', [LokasiController::class, 'store'])->name('lokasi.store');
+
+// Route umum
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::get('/dashboard', [DashboardRedirectController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
+// Profile untuk semua user (autentikasi)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Route Admin
 Route::middleware(['auth', AdminMiddleware::class])->prefix('admin/users')->name('admin.users.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/', [UserController::class, 'index'])->name('index');
@@ -41,14 +64,9 @@ Route::middleware(['auth', AdminMiddleware::class])->prefix('admin/users')->name
 
     Route::get('/role/{role}', [UserController::class, 'indexByRole'])->name('byRole');
     Route::get('/admin/users/owner/{id}/detail', [UserController::class, 'detailOwner'])->name('detailOwner');
-
-
-
-    // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Route Owner
 Route::middleware(['auth', OwnerMiddleware::class])->prefix('owner')->name('owner.')->group(function () {
     Route::get('/owner/dashboard', [OwnerDashboardController::class, 'index'])->name('dashboard');
     Route::get('/report', [ReportController::class, 'index'])->name('reports.index');
@@ -66,6 +84,7 @@ Route::middleware(['auth', OwnerMiddleware::class])->prefix('owner')->name('owne
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Route Customer
 Route::middleware(['auth', CustomerMiddleware::class])->prefix('customer')->name('customer.')->group(function () {
     Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->name('dashboard');
     Route::get('/properties', [CustomerPropertyController::class, 'index'])->name('properties.index');
@@ -84,6 +103,7 @@ Route::middleware(['auth', CustomerMiddleware::class])->prefix('customer')->name
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Route Resepsionis
 Route::middleware(['auth', ResepsionisMiddleware::class])->prefix('resepsionis')->name('resepsionis.')->group(function () {
     Route::get('/properties', [ReceptionistPropertyController::class, 'index'])->name('properties.index');
     Route::put('/properties/{property}/availability', [ReceptionistPropertyController::class, 'updateAvailability'])->name('properties.updateAvailability');
@@ -92,6 +112,5 @@ Route::middleware(['auth', ResepsionisMiddleware::class])->prefix('resepsionis')
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
 
 require __DIR__ . '/auth.php';
