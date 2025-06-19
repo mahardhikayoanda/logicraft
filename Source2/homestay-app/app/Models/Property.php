@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Property extends Model
 {
@@ -32,10 +33,12 @@ class Property extends Model
         return $this->hasMany(Reservation::class);
     }
 
-    public function wishlists()
+    public function wishlistedBy(): BelongsToMany
     {
-        return $this->hasMany(Wishlist::class);
+        return $this->belongsToMany(User::class, 'wishlists', 'property_id', 'customer_id')->withTimestamps();
     }
+
+
 
     public function isBookedOn($checkIn, $checkOut)
     {

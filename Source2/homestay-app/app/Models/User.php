@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\Property;
 
 class User extends Authenticatable
@@ -58,13 +59,8 @@ class User extends Authenticatable
         return $this->hasMany(Reservation::class, 'customer_id');
     }
 
-    public function wishlists()
+    public function wishlists(): BelongsToMany
     {
-        return $this->hasMany(Wishlist::class);
+        return $this->belongsToMany(Property::class, 'wishlists', 'customer_id', 'property_id')->withTimestamps();
     }
-
-    // public function isOwner()
-    // {
-    //     return $this->role === 'owner';
-    // }
 }

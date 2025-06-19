@@ -100,6 +100,10 @@ class ReservationController extends Controller
         $request->validate([
             'check_in_date' => 'required|date|after_or_equal:today',
             'check_out_date' => 'required|date|after:check_in_date',
+            'nama_lengkap' => 'required|string|max:255',
+            'email' => 'required|email',
+            'no_hp' => 'required|string|max:20',
+            'jumlah_tamu' => 'required|integer|min:1',
         ]);
 
         $checkIn = \Carbon\Carbon::parse($request->check_in_date);
@@ -108,9 +112,13 @@ class ReservationController extends Controller
         $totalPrice = $days * $reservation->property->price_per_night;
 
         $reservation->update([
-            'check_in_date' => $checkIn,
+            'check_in_date'  => $checkIn,
             'check_out_date' => $checkOut,
-            'total_price' => $totalPrice,
+            'total_price'    => $totalPrice,
+            'nama_lengkap'   => $request->nama_lengkap,
+            'email'          => $request->email,
+            'no_hp'          => $request->no_hp,
+            'jumlah_tamu'    => $request->jumlah_tamu,
         ]);
 
         return redirect()->route('customer.reservations.history')->with('success', 'Reservasi berhasil diperbarui.');
