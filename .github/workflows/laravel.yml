@@ -35,17 +35,20 @@ jobs:
         php-version: '8.0'
         extensions: mbstring, bcmath, pdo_mysql
 
+    - name: Change to Laravel directory
+      run: cd Source2/homestay-app && ls -la
+
     - name: Copy .env
-      run: cp .env.example .env
+      run: cp Source2/homestay-app/.env.example Source2/homestay-app/.env
 
     - name: Install Dependencies
-      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      run: cd Source2/homestay-app && composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
     - name: Generate Application Key
-      run: php artisan key:generate
+      run: cd Source2/homestay-app && php artisan key:generate
 
     - name: Set Directory Permissions
-      run: chmod -R 777 storage bootstrap/cache
+      run: chmod -R 777 Source2/homestay-app/storage Source2/homestay-app/bootstrap/cache
 
     - name: Run Migrations
       env:
@@ -55,7 +58,7 @@ jobs:
         DB_DATABASE: homestay_db
         DB_USERNAME: root
         DB_PASSWORD: ""
-      run: php artisan migrate --force
+      run: cd Source2/homestay-app && php artisan migrate --force
 
     - name: Run Tests
       env:
@@ -65,4 +68,4 @@ jobs:
         DB_DATABASE: homestay_db
         DB_USERNAME: root
         DB_PASSWORD: ""
-      run: php artisan test
+      run: cd Source2/homestay-app && php artisan test
