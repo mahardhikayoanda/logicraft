@@ -9,78 +9,114 @@
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600&display=swap" rel="stylesheet" />
 
     <!-- Styles / Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
 
-<body class="bg-gray-100 font-sans antialiased text-gray-900">
-    <div class="min-h-screen flex items-center justify-center px-4">
-        <div class="w-full max-w-3xl bg-white shadow-md rounded-xl overflow-hidden flex flex-col lg:flex-row">
+<body class="bg-gradient-to-br from-blue-50 to-white min-h-screen flex items-center justify-center px-4 py-12">
+    
+    <div class="bg-white max-w-sm w-full rounded-3xl shadow-2xl border border-gray-200 relative overflow-hidden" style="aspect-ratio: 2/3;">
+        <!-- Outer container with padding -->
+        <div class="p-6 md:p-8">
+            <!-- Inner content container -->
+            <div class="px-8 py-6 md:px-10 md:py-8 h-full">
+                <!-- Decorative circles -->
+                <div class="absolute -top-10 -left-10 w-24 h-24 bg-blue-100 rounded-full blur-2xl opacity-30"></div>
+                <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-blue-200 rounded-full blur-3xl opacity-40"></div>
 
-            <!-- Left Branding -->
-            <div class="bg-gray-50 lg:w-1/2 flex flex-col items-center justify-center p-6 text-center">
-                <img src="{{ asset('rb-logo.png') }}" alt="Logo" class="h-20 mb-4">
-                <h2 class="text-xl font-bold mb-1">
-                    Book your favorite <span class="text-teal-600">properties</span> with one simple click.
-                </h2>
-            </div>
-
-            <!-- Right Form -->
-            <div class="lg:w-1/2 w-full p-6">
-                <h2 class="text-lg font-semibold mb-1">Welcome to <span class="text-black">LalokSumbar.id</span></h2>
-                <p class="text-sm text-gray-600 mb-5">Login to continue</p>
-
-                @if (session('status'))
-                    <div class="mb-4 text-sm text-green-600">
-                        {{ session('status') }}
-                    </div>
-                @endif
-
-                <form method="POST" action="{{ route('login') }}" class="space-y-4">
-                    @csrf
-
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                        <input id="email" type="email" name="email" value="{{ old('email') }}" required
-                            autofocus
-                            class="mt-1 w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-teal-200 focus:border-teal-400 px-3 py-2 text-sm">
-                        @error('email')
-                            <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
-                        @enderror
+                <!-- Content -->
+                <div class="relative z-10 h-full flex flex-col justify-center">
+                    <!-- Header -->
+                    <div class="text-center mb-8">
+                        <h1 class="text-2xl font-semibold text-gray-900 mb-2">Selamat Datang!</h1>
+                        <p class="text-gray-600 text-sm">
+                            Masuk untuk melanjutkan ke <span class="font-medium">LalokSumbar.id</span>
+                        </p>
                     </div>
 
-                    <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                        <input id="password" type="password" name="password" required
-                            class="mt-1 w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-teal-200 focus:border-teal-400 px-3 py-2 text-sm">
-                        @error('password')
-                            <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+                    <!-- Session Status -->
+                    @if (session('status'))
+                        <div class="mb-4 text-sm text-green-600 bg-green-50 p-3 rounded-lg">
+                            {{ session('status') }}
+                        </div>
+                    @endif
 
-                    <div class="flex items-center justify-between text-sm">
-                        <a href="{{ route('password.request') }}" class="text-teal-600 hover:underline">Forgot
-                            password?</a>
-                    </div>
+                    <!-- Login Form -->
+                    <form method="POST" action="{{ route('login') }}" class="space-y-6 flex-1 flex flex-col justify-center">
+                        @csrf
 
-                    <div>
-                        <button type="submit"
-                            class="w-full bg-teal-600 text-white font-semibold py-2 rounded hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-400 text-sm">
-                            LOGIN
+                        <!-- Email Field -->
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                            <input 
+                                id="email" 
+                                type="email" 
+                                name="email" 
+                                value="{{ old('email') }}" 
+                                required 
+                                autofocus
+                                placeholder="masukkan email"
+                                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm placeholder-gray-400"
+                            >
+                            @error('email')
+                                <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Password Field -->
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                            <input 
+                                id="password" 
+                                type="password" 
+                                name="password" 
+                                required
+                                placeholder="masukkan password"
+                                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm placeholder-gray-400"
+                            >
+                            @error('password')
+                                <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Forgot Password Link -->
+                        <div class="text-right">
+                            <a href="{{ route('password.request') }}" 
+                            class="text-sm text-gray-600 hover:text-gray-800 transition-colors duration-200">
+                                lupa password?
+                            </a>
+                        </div>
+
+                        <!-- Login Button -->
+                        <button 
+                            type="submit"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                        >
+                            Masuk
                         </button>
-                    </div>
-                </form>
+                    </form>
 
-                <div class="text-center mt-4 text-sm">
-                    Don't have an account?
-                    <a href="{{ route('register') }}" class="text-teal-600 hover:underline">Register</a>
+                    <!-- Register Link -->
+                    <div class="text-center mt-6">
+                        <p class="text-sm text-gray-600">
+                            belum punya akun? 
+                            <a href="{{ route('register') }}" 
+                            class="text-blue-600 hover:text-blue-700 font-medium transition-colors duration-200">
+                                Daftar Sekarang
+                            </a>
+                        </p>
+                    </div>
                 </div>
             </div>
-
         </div>
     </div>
+
 </body>
 
 </html>
