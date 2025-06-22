@@ -43,7 +43,7 @@
                     <div class="mt-6 bg-orange-50 rounded-2xl p-6 border border-orange-100">
                         <h3 class="text-lg font-semibold text-gray-800 mb-2">Kamu ingin tambahkan User?</h3>
                         <p class="text-gray-600 text-sm mb-4">tambahkan User baru User baru</p>
-                        <a href="{{ route('admin.users.create') }}" 
+                        <a href="{{ route('admin.users.create') }}"
                            class="inline-flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-lg transition-colors duration-200">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
