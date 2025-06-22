@@ -22,7 +22,7 @@ use App\Http\Middleware\OwnerMiddleware;
 use App\Http\Controllers\Resepsionis\DashboardController as ResepsionisDashboardController;
 use App\Http\Controllers\Resepsionis\PromotionController;
 use App\Http\Middleware\ResepsionisMiddleware;
-use App\Models\Promotion;
+// use App\Models\Promotion;
 use App\Http\Controllers\Resepsionis\ReservationController as ResepsionisReservationController;
 
 // Route pencarian lokasi (OpenStreetMap API)
@@ -70,6 +70,10 @@ Route::middleware(['auth', AdminMiddleware::class])->prefix('admin/users')->name
     Route::get('/admin/users/owner/{id}/detail', [UserController::class, 'detailOwner'])->name('detailOwner');
 });
 
+Route::get('/reservations/{reservation}/payment-callback',
+    [ReservationController::class, 'paymentCallback'])
+    ->name('customer.reservations.callback');
+
 // Route Owner
 Route::middleware(['auth', OwnerMiddleware::class])->prefix('owner')->name('owner.')->group(function () {
     Route::get('/owner/dashboard', [OwnerDashboardController::class, 'index'])->name('dashboard');
@@ -96,6 +100,7 @@ Route::middleware(['auth', CustomerMiddleware::class])->prefix('customer')->name
     Route::get('/reservations/create/{property}', [ReservationController::class, 'create'])->name('reservations.create');
     Route::post('/properties/{property}/reserve', [ReservationController::class, 'store'])->name('reservations.store');
     Route::get('/reservations/history', [ReservationController::class, 'history'])->name('reservations.history');
+    Route::get('/reservations/{reservation}/payment-callback',[ReservationController::class, 'paymentCallback'])->name('reservations.callback');
     Route::get('/reservations/{reservation}', [ReservationController::class, 'show'])->name('reservations.show');
     Route::get('/reservations/{reservation}/edit', [ReservationController::class, 'edit'])->name('reservations.edit');
     Route::put('/reservations/{reservation}', [ReservationController::class, 'update'])->name('reservations.update');

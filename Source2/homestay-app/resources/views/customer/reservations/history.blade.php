@@ -42,17 +42,12 @@
                             <div class="mt-4 flex flex-wrap gap-2">
                                 <a href="{{ route('customer.reservations.show', $reservation->id) }}"
                                     class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
-                                    Lihat Detail
+                                    Bayar
                                 </a>
 
                                 <a href="{{ route('customer.reservations.edit', $reservation->id) }}"
                                     class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm">
                                     Edit
-                                </a>
-
-                                <a href="{{ route('customer.reservations.edit', $reservation->id) }}"
-                                    class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">
-                                    Bayar
                                 </a>
 
                                 <form action="{{ route('customer.reservations.cancel', $reservation->id) }}" method="POST"
