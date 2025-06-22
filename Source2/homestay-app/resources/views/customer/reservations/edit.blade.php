@@ -1,16 +1,17 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-xl font-semibold">Edit Reservasi</h2>
-    </x-slot>
+@extends('layouts.customer')
 
+@section('title', 'Edit Reservasi')
+
+@section('content')
     <div class="max-w-3xl mx-auto p-6 bg-white rounded shadow">
+
         <form method="POST" action="{{ route('customer.reservations.update', $reservation->id) }}">
             @csrf
             @method('PUT')
 
             {{-- Nama Lengkap --}}
             <div class="mb-4">
-                <label for="nama_lengkap" class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
+                <label for="nama_lengkap" class="block text-sm font-medium text-gray-700">Nama Lengkap Sesuai KTP</label>
                 <input type="text" name="nama_lengkap" id="nama_lengkap" class="w-full border p-2 rounded"
                     value="{{ old('nama_lengkap', $reservation->nama_lengkap) }}" required>
             </div>
@@ -32,9 +33,8 @@
             {{-- Jumlah Tamu --}}
             <div class="mb-4">
                 <label for="jumlah_tamu" class="block text-sm font-medium text-gray-700">Jumlah Tamu</label>
-                <input type="number" name="jumlah_tamu" id="jumlah_tamu" min="1"
-                    class="w-full border p-2 rounded" value="{{ old('jumlah_tamu', $reservation->jumlah_tamu) }}"
-                    required>
+                <input type="number" name="jumlah_tamu" id="jumlah_tamu" min="1" class="w-full border p-2 rounded"
+                    value="{{ old('jumlah_tamu', $reservation->jumlah_tamu) }}" required>
             </div>
 
             {{-- Tanggal Check-in --}}
@@ -56,4 +56,4 @@
             </button>
         </form>
     </div>
-</x-app-layout>
+@endsection

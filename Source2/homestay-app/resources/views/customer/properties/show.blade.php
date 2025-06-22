@@ -41,28 +41,7 @@
         <div class="bg-white p-4 rounded-lg shadow mb-6">
             <h3 class="text-xl font-semibold mb-4">📍 Lokasi Properti</h3>
 
-            <div class="mb-4">
-                <label class="block mb-1 font-medium">Cari Lokasi:</label>
-                <input type="text" id="searchInput" class="border p-2 w-full rounded"
-                    placeholder="Contoh: Monas, Jakarta">
-                <button onclick="cariLokasi()" type="button"
-                    class="mt-2 bg-blue-500 text-white px-3 py-1 rounded">Cari</button>
-            </div>
-
             <div id="map" class="w-full h-64 rounded mb-4"></div>
-
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label for="latitude" class="block font-medium">Latitude</label>
-                    <input type="text" id="latitude" name="latitude" class="border p-2 w-full rounded"
-                        value="{{ $property->latitude ?? '' }}">
-                </div>
-                <div>
-                    <label for="longitude" class="block font-medium">Longitude</label>
-                    <input type="text" id="longitude" name="longitude" class="border p-2 w-full rounded"
-                        value="{{ $property->longitude ?? '' }}">
-                </div>
-            </div>
         </div>
 
         {{-- Form Cek Ketersediaan --}}
@@ -82,8 +61,21 @@
                 </div>
             </div>
 
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded mt-4 hover:bg-blue-600">
-                Cek Ketersediaan
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded mt-4 hover:bg-blue-600">Cek
+                Ketersediaan</button>
+        </form>
+
+        {{-- Tombol Wishlist --}}
+        <form method="POST" action="{{ route('customer.wishlist.store', $property->id) }}">
+            @csrf
+            <button type="submit"
+                class="inline-flex items-center bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-5 h-5 mr-1">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M21 8.25c0-2.623-2.127-4.75-4.75-4.75-1.574 0-3.033.788-3.958 2.019A5.003 5.003 0 007.75 3.5C5.127 3.5 3 5.627 3 8.25c0 6.215 9 12.75 9 12.75s9-6.535 9-12.75z" />
+                </svg>
+                Wishlist
             </button>
         </form>
 
@@ -100,21 +92,23 @@
         {{-- Tampilkan Tombol atau Pesan --}}
         @if (request()->filled('check_in_date') && request()->filled('check_out_date'))
             @if (!$isBooked)
-                <a href="{{ route('customer.reservations.create', [
-                    'property' => $property->id,
-                    'check_in_date' => request('check_in_date'),
-                    'check_out_date' => request('check_out_date'),
-                ]) }}"
-                    class="bg-green-500 text-white px-4 py-2 rounded inline-block hover:bg-green-600">
-                    Pesan Sekarang
-                </a>
+                <div class="flex flex-wrap items-center gap-2">
+                    {{-- Tombol Pesan --}}
+                    <a href="{{ route('customer.reservations.create', [
+                        'property' => $property->id,
+                        'check_in_date' => request('check_in_date'),
+                        'check_out_date' => request('check_out_date'),
+                    ]) }}"
+                        class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                        Pesan Sekarang
+                    </a>
+                </div>
             @else
                 <div class="bg-red-100 text-red-700 px-4 py-2 rounded">
                     Properti tidak tersedia pada tanggal tersebut.
                 </div>
             @endif
         @endif
-
     </div>
 
     {{-- Leaflet CSS & JS --}}
@@ -122,48 +116,18 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
-        let map = L.map('map').setView([{{ $property->latitude ?? '-6.200000' }},
-            {{ $property->longitude ?? '106.816666' }}
-        ], 13);
-        let marker = L.marker([{{ $property->latitude ?? '-6.200000' }}, {{ $property->longitude ?? '106.816666' }}])
-            .addTo(map);
+        let map = L.map('map').setView(
+            [{{ $property->latitude ?? '-6.200000' }}, {{ $property->longitude ?? '106.816666' }}],
+            13
+        );
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        function cariLokasi() {
-            let lokasi = document.getElementById('searchInput').value;
-            if (!lokasi) {
-                alert("Masukkan lokasi yang ingin dicari.");
-                return;
-            }
-
-            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${lokasi}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.length > 0) {
-                        let lat = data[0].lat;
-                        let lon = data[0].lon;
-
-                        document.getElementById('latitude').value = lat;
-                        document.getElementById('longitude').value = lon;
-
-                        map.setView([lat, lon], 14);
-
-                        if (marker) {
-                            map.removeLayer(marker);
-                        }
-
-                        marker = L.marker([lat, lon]).addTo(map);
-                    } else {
-                        alert("Lokasi tidak ditemukan.");
-                    }
-                })
-                .catch(error => {
-                    console.error("Terjadi kesalahan:", error);
-                    alert("Terjadi kesalahan saat mencari lokasi.");
-                });
-        }
+        let marker = L.marker([
+            {{ $property->latitude ?? '-6.200000' }},
+            {{ $property->longitude ?? '106.816666' }}
+        ]).addTo(map);
     </script>
 @endsection

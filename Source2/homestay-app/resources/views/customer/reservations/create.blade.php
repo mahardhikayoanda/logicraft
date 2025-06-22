@@ -17,7 +17,7 @@
 
             {{-- Nama Lengkap --}}
             <div class="mb-4">
-                <label for="nama_lengkap" class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
+                <label for="nama_lengkap" class="block text-sm font-medium text-gray-700">Nama Lengkap Sesuai KTP</label>
                 <input type="text" name="nama_lengkap" id="nama_lengkap" class="w-full border p-2 rounded"
                     value="{{ old('nama_lengkap') }}" required>
             </div>

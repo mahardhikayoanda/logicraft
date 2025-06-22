@@ -22,6 +22,7 @@ use App\Http\Middleware\OwnerMiddleware;
 use App\Http\Controllers\Resepsionis\DashboardController as ResepsionisDashboardController;
 use App\Http\Controllers\Resepsionis\PromotionController;
 use App\Http\Middleware\ResepsionisMiddleware;
+use App\Http\Controllers\Customer\WishlistController;
 // use App\Models\Promotion;
 use App\Http\Controllers\Resepsionis\ReservationController as ResepsionisReservationController;
 
@@ -106,6 +107,9 @@ Route::middleware(['auth', CustomerMiddleware::class])->prefix('customer')->name
     Route::put('/reservations/{reservation}', [ReservationController::class, 'update'])->name('reservations.update');
     Route::put('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])->name('reservations.cancel');
     Route::delete('/reservations/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/wishlist/{propertyId}', [WishlistController::class, 'store'])->name('wishlist.store');
+    Route::delete('/wishlist/{propertyId}', [WishlistController::class, 'destroy'])->name('wishlist.destroy');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
