@@ -14,7 +14,7 @@ class DashboardRedirectController extends Controller
         return match ($user->role) {
             'admin' => redirect()->route('admin.users.dashboard'),
             'owner' => redirect()->route('owner.dashboard'),
-            'receptionist' => redirect()->route('resepsionis.dashboard'),
+            'resepsionis' => redirect()->route('resepsionis.dashboard'),
             'customer' => redirect()->route('customer.dashboard'),
             default => abort(403, 'Role tidak dikenal'),
         };

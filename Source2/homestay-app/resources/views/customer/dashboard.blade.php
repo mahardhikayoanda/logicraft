@@ -4,7 +4,6 @@
 
 @section('content')
     <div class="mb-6">
-
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div class="bg-white rounded shadow p-6 text-center">
                 <h3 class="text-lg font-semibold text-gray-700 mb-2">Total Reservasi</h3>
@@ -25,6 +24,32 @@
             </div>
         </div>
     </div>
+
+    <!-- Section Promosi (dipindah ke atas) -->
+    <section class="my-6">
+        <h2 class="text-xl font-semibold mb-4">Promosi Aktif</h2>
+
+        @if ($promotions->isEmpty())
+            <p class="text-gray-500">Tidak ada promosi saat ini.</p>
+        @else
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                @foreach ($promotions as $promo)
+                    <div class="bg-white rounded shadow p-4">
+                        @if ($promo->image_path)
+                            <img src="{{ asset('storage/' . $promo->image_path) }}"
+                                class="w-full h-40 object-cover rounded mb-3"
+                                alt="{{ $promo->title }}">
+                        @endif
+                        <h3 class="text-lg font-bold">{{ $promo->title }}</h3>
+                        <p class="text-sm text-gray-600 mb-1">
+                            {{ $promo->start_date }} s/d {{ $promo->end_date }}
+                        </p>
+                        <p class="text-sm text-gray-700">{{ $promo->description }}</p>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+    </section>
 
     <!-- Section Properti -->
     <div class="mb-6">

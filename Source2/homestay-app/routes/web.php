@@ -19,9 +19,11 @@ use App\Http\Controllers\Resepsionis\PropertyController as ReceptionistPropertyC
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\CustomerMiddleware;
 use App\Http\Middleware\OwnerMiddleware;
+use App\Http\Controllers\Resepsionis\DashboardController as ResepsionisDashboardController;
+use App\Http\Controllers\Resepsionis\PromotionController;
 use App\Http\Middleware\ResepsionisMiddleware;
-use App\Http\Controllers\Customer\PaymentController;
-use App\Http\Controllers\Customer\PaymentNotificationController;
+// use App\Models\Promotion;
+use App\Http\Controllers\Resepsionis\ReservationController as ResepsionisReservationController;
 
 // Route pencarian lokasi (OpenStreetMap API)
 Route::get('/api/cari-lokasi', function () {
@@ -112,12 +114,38 @@ Route::middleware(['auth', CustomerMiddleware::class])->prefix('customer')->name
 
 // Route Resepsionis
 Route::middleware(['auth', ResepsionisMiddleware::class])->prefix('resepsionis')->name('resepsionis.')->group(function () {
-    Route::get('/properties', [ReceptionistPropertyController::class, 'index'])->name('properties.index');
-    Route::put('/properties/{property}/availability', [ReceptionistPropertyController::class, 'updateAvailability'])->name('properties.updateAvailability');
+        Route::get('/dashboard', [ResepsionisDashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        // ✅ Route manual untuk PromotionController
+        Route::get('/promotions', [PromotionController::class, 'index'])->name('promotions.index');
+        Route::get('/promotions/create', [PromotionController::class, 'create'])->name('promotions.create');
+        Route::post('/promotions', [PromotionController::class, 'store'])->name('promotions.store');
+        Route::get('/promotions/{promotion}/edit', [PromotionController::class, 'edit'])->name('promotions.edit');
+        Route::put('/promotions/{promotion}', [PromotionController::class, 'update'])->name('promotions.update');
+        Route::delete('/promotions/{promotion}', [PromotionController::class, 'destroy'])->name('promotions.destroy');
+
+        //ini tempat route reservasi resepsionis
+        Route::get('/reservations', [ResepsionisReservationController::class, 'index'])->name('reservations.index');
+
+
+        // Properti & Profil
+        Route::get('/properties', [ReceptionistPropertyController::class, 'index'])->name('properties.index');
+        Route::put('/properties/{property}/availability', [ReceptionistPropertyController::class, 'updateAvailability'])->name('properties.updateAvailability');
+
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Route::get('/dashboard', [ResepsionisDashboardController::class, 'index'])->name('dashboard');
+    // // Route::resource('promotions', PromotionController::class);
+    
+    // Route::get('/promotions', [PromotionController::class, 'index'])->name('promotions.index');
+    // Route::get('/properties', [ReceptionistPropertyController::class, 'index'])->name('properties.index');
+    // Route::put('/properties/{property}/availability', [ReceptionistPropertyController::class, 'updateAvailability'])->name('properties.updateAvailability');
+
+    // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 require __DIR__ . '/auth.php';

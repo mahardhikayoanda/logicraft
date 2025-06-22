@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Reservation;
 use App\Models\Property;
+use App\Models\Promotion;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -26,12 +27,20 @@ class DashboardController extends Controller
             $query->where('name', 'like', '%' . $request->search . '%');
         }
 
-        $properties = $query->latest()->take(6)->get(); // tampilkan max 6
+        $properties = $query->latest()->take(6)->get(); // tampilkan max 6 properti
+
+        // Tambahan: ambil promosi aktif
+        $today = now()->toDateString();
+        $promotions = Promotion::where('start_date', '<=', $today)
+                               ->where('end_date', '>=', $today)
+                               ->latest()
+                               ->get();
 
         return view('customer.dashboard', compact(
             'totalReservations',
             'upcomingReservations',
-            'properties'
+            'properties',
+            'promotions' // ← kirim ke view
         ));
     }
 }
