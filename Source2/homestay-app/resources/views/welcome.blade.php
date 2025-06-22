@@ -4,17 +4,37 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LandingPage | LalokSumbar.id</title>
+    <title>Dashboard - LalokSumbar.id</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            /* Efek background gradient berganti warna lembut dan halus */
+            animation: gradientBG 30s ease-in-out infinite;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background: linear-gradient(to right, #e0f7fa, #f1f8e9);
+            }
+            25% {
+                background: linear-gradient(to right, #ffe0b2, #f8bbd0);
+            }
+            50% {
+                background: linear-gradient(to right, #b2ebf2, #ffe0b2);
+            }
+            75% {
+                background: linear-gradient(to right, #d1c4e9, #ffccbc);
+            }
+            100% {
+                background: linear-gradient(to right, #e0f7fa, #f1f8e9);
+            }
         }
     </style>
 </head>
 
-<body class="bg-gradient-to-br from-blue-50 to-white min-h-screen flex items-center justify-center px-4 py-12">
+<body class="min-h-screen flex items-center justify-center px-4 py-12">
 
     <div class="bg-white max-w-4xl w-full rounded-3xl shadow-2xl p-10 md:p-14 flex flex-col md:flex-row items-center gap-10 border border-gray-200 relative overflow-hidden">
 
@@ -24,7 +44,7 @@
 
         <!-- Left: Illustration -->
         <div class="w-full md:w-1/2 animate-fade-in">
-            <img src="{{ url('rb-logo.png') }}" alt="LalokSumbar Logo" class="w-full h-auto drop-shadow-md rounded-lg">
+            <img src="{{ url('rb-logo.png') }}" alt="LalokSumbar Logo" class="w-full h-auto drop-shadow-md rounded-lg" />
         </div>
 
         <!-- Right: Content -->

@@ -8,6 +8,9 @@ use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
+use Midtrans\Config;
+use Midtrans\Snap;
 
 class ReservationController extends Controller
 {
@@ -171,6 +174,55 @@ class ReservationController extends Controller
             ->where('customer_id', Auth::id())
             ->findOrFail($id);
 
-        return view('customer.reservations.show', compact('reservation'));
+        Config::$serverKey    = config('services.midtrans.server_key');
+        Config::$isProduction = config('services.midtrans.is_production');
+        Config::$isSanitized  = config('services.midtrans.is_sanitized');
+        Config::$is3ds        = config('services.midtrans.is_3ds');
+
+        // Siapkan parameter transaksi
+        $transaction_details = [
+            'order_id'     => 'reservation-' . $reservation->id . '-' . Str::random(5),
+            'gross_amount' => $reservation->total_price,
+        ];
+        $customer_details = [
+            'first_name' => $reservation->nama_lengkap,
+            'email'      => $reservation->email,
+            'phone'      => $reservation->no_hp,
+        ];
+        $item_details = [[
+            'id'       => $reservation->property->id,
+            'price'    => $reservation->total_price,
+            'quantity' => 1,
+            'name'     => $reservation->property->name,
+        ]];
+
+        $params = [
+            'transaction_details' => $transaction_details,
+            'customer_details'    => $customer_details,
+            'item_details'        => $item_details,
+        ];
+
+        $snapToken = Snap::getSnapToken($params);
+
+        return view('customer.reservations.show', compact('reservation', 'snapToken'));
+    }
+
+    // Callback setelah Snap window tutup / sukses
+    public function paymentCallback(Request $request, $id)
+    {
+        // Midtrans mengembalikan result di query string ?result={JSON}
+        $result = json_decode($request->query('result'), true);
+
+        if (in_array($result['transaction_status'], ['capture', 'settlement'])) {
+            $reservation = Reservation::findOrFail($id);
+            $reservation->update([
+                'status'         => 'confirmed',
+                'payment_type'   => $result['payment_type'] ?? null,
+                'transaction_id' => $result['transaction_id'] ?? null,
+                'payment_data'   => $result,   // simpan full JSON jika mau
+            ]);
+        }
+
+        return redirect()->route('customer.reservations.history', $id)->with('success', 'Pembayaran berhasil diproses.');
     }
 }
