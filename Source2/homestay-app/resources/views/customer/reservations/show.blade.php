@@ -37,14 +37,13 @@
             <p><strong>Email:</strong> {{ $reservation->email }}</p>
             <p><strong>No. HP:</strong> {{ $reservation->no_hp }}</p>
 
-            {{-- @if ($reservation->status === 'pending')
+            @if ($reservation->status === 'pending')
                 <div class="mt-4">
-                    <a href="{{ route('customer.reservations.payment.form', $reservation->id) }}"
-                        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+                    <button id="pay-button" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
                         Bayar Sekarang
-                    </a>
+                    </button>
                 </div>
-            @endif --}}
+            @endif
         </div>
 
         <div class="mt-6">
@@ -52,4 +51,28 @@
                 ke Riwayat</a>
         </div>
     </div>
+
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js"
+        data-client-key="{{ config('services.midtrans.client_key') }}"></script>
+    <script>
+        document.getElementById('pay-button')?.addEventListener('click', function() {
+            snap.pay('{{ $snapToken }}', {
+                onSuccess: function(result) {
+                    // Redirect ke callback route, kirim result JSON
+                    window.location =
+                        "{{ route('customer.reservations.callback', $reservation->id) }}" +
+                        "?result=" + encodeURIComponent(JSON.stringify(result));
+                },
+                onPending: function(result) {
+                    alert('Transaksi pending: ' + result.status_message);
+                },
+                onError: function(result) {
+                    alert('Terjadi kesalahan: ' + result.status_message);
+                },
+                onClose: function() {
+                    console.log('User menutup popup tanpa menyelesaikan pembayaran.');
+                }
+            });
+        });
+    </script>
 </x-app-layout>
