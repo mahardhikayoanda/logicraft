@@ -27,7 +27,12 @@ class CustomerPropertyController extends Controller
 
     public function show(Property $property)
     {
-        $property->load('images', 'reservations');
+        // Load relasi gambar dan reservasi + review
+        $property->load(['images', 'reservations.review']);
+
+        // Lalu load relasi review -> customer
+        $property->reservations->load('review.customer');
+
         return view('customer.properties.show', compact('property'));
     }
 }

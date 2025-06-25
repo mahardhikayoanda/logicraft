@@ -38,7 +38,10 @@ class Property extends Model
         return $this->belongsToMany(User::class, 'wishlists', 'property_id', 'customer_id')->withTimestamps();
     }
 
-
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, Reservation::class);
+    }
 
     public function isBookedOn($checkIn, $checkOut)
     {

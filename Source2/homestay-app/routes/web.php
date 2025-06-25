@@ -23,7 +23,7 @@ use App\Http\Controllers\Resepsionis\DashboardController as ResepsionisDashboard
 use App\Http\Controllers\Resepsionis\PromotionController;
 use App\Http\Middleware\ResepsionisMiddleware;
 use App\Http\Controllers\Customer\WishlistController;
-// use App\Models\Promotion;
+use App\Http\Controllers\Customer\ReviewController;
 use App\Http\Controllers\Resepsionis\ReservationController as ResepsionisReservationController;
 
 // Route pencarian lokasi (OpenStreetMap API)
@@ -110,6 +110,9 @@ Route::middleware(['auth', CustomerMiddleware::class])->prefix('customer')->name
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
     Route::post('/wishlist/{propertyId}', [WishlistController::class, 'store'])->name('wishlist.store');
     Route::delete('/wishlist/{propertyId}', [WishlistController::class, 'destroy'])->name('wishlist.destroy');
+    Route::get('/reviews/{reservation}/create', [ReviewController::class, 'create'])->name('reviews.create');
+    Route::post('/reviews/{reservation}', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::put('/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -142,7 +145,7 @@ Route::middleware(['auth', ResepsionisMiddleware::class])->prefix('resepsionis')
 
     // Route::get('/dashboard', [ResepsionisDashboardController::class, 'index'])->name('dashboard');
     // // Route::resource('promotions', PromotionController::class);
-    
+
     // Route::get('/promotions', [PromotionController::class, 'index'])->name('promotions.index');
     // Route::get('/properties', [ReceptionistPropertyController::class, 'index'])->name('properties.index');
     // Route::put('/properties/{property}/availability', [ReceptionistPropertyController::class, 'updateAvailability'])->name('properties.updateAvailability');

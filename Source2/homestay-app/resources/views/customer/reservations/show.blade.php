@@ -47,10 +47,6 @@
                     {{ $reservation->status }}
                 </span>
             </p>
-            
-            <p class="mt-2"><strong>Nama Pemesan:</strong> {{ $reservation->nama_lengkap }}</p>
-            <p><strong>Email:</strong> {{ $reservation->email }}</p>
-            <p><strong>No. HP:</strong> {{ $reservation->no_hp }}</p>
 
             @if ($reservation->status === 'pending')
                 <div class="mt-4">
@@ -68,7 +64,7 @@
             </a>
         </div>
     </div>
-    
+
     <script src="https://app.sandbox.midtrans.com/snap/snap.js"
         data-client-key="{{ config('services.midtrans.client_key') }}"></script>
     <script>

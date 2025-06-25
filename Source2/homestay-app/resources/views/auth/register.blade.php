@@ -82,8 +82,8 @@
                 <select id="role" name="role" required
                         class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 shadow-sm hover:shadow-md">
                     <option value="" disabled {{ old('role') ? '' : 'selected' }}>-- Pilih Role --</option>
-                    <option value="Customer" {{ old('role') == 'Customer' ? 'selected' : '' }}>Customer</option>
-                    <option value="Owner" {{ old('role') == 'Owner' ? 'selected' : '' }}>Owner</option>
+                    <option value="customer" {{ old('role') == 'customer' ? 'selected' : '' }}>Customer</option>
+                    <option value="cwner" {{ old('role') == 'owner' ? 'selected' : '' }}>Owner</option>
                 </select>
             </div>
 
