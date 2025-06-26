@@ -34,37 +34,25 @@ use App\Http\Controllers\Resepsionis\PropertyController as ReceptionistPropertyC
 use App\Http\Controllers\Resepsionis\ReservationController as ResepsionisReservationController;
 use App\Http\Middleware\ResepsionisMiddleware;
 
-/*
-|--------------------------------------------------------------------------
-| Guest Routes
-|--------------------------------------------------------------------------
-*/
+//Route guest
 Route::get('/', [GuestPropertyController::class, 'index'])->name('guest.properties.index');
 Route::get('/property/{id}', [GuestPropertyController::class, 'show'])->name('guest.properties.show');
 
-/*
-|--------------------------------------------------------------------------
-| Dashboard Redirect (After Login)
-|--------------------------------------------------------------------------
-*/
+
+//Dashboard Redirect (After Login)
+
 Route::get('/dashboard', [DashboardRedirectController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
-/*
-|--------------------------------------------------------------------------
-| Authenticated User Routes (Profile)
-|--------------------------------------------------------------------------
-*/
+//Authenticated User Routes (Profile)
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-/*
-|--------------------------------------------------------------------------
-| Admin Routes
-|--------------------------------------------------------------------------
-*/
+//Admin Routes
+
 Route::middleware(['auth', AdminMiddleware::class])->prefix('admin/users')->name('admin.users.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('/', [UserController::class, 'index'])->name('index');
@@ -78,11 +66,8 @@ Route::middleware(['auth', AdminMiddleware::class])->prefix('admin/users')->name
     Route::get('/owner/{id}/detail', [UserController::class, 'detailOwner'])->name('detailOwner');
 });
 
-/*
-|--------------------------------------------------------------------------
-| Owner Routes
-|--------------------------------------------------------------------------
-*/
+//Owner Routes
+
 Route::middleware(['auth', OwnerMiddleware::class])->prefix('owner')->name('owner.')->group(function () {
     Route::get('/dashboard', [OwnerDashboardController::class, 'index'])->name('dashboard');
     Route::get('/report', [ReportController::class, 'index'])->name('reports.index');
@@ -97,11 +82,8 @@ Route::middleware(['auth', OwnerMiddleware::class])->prefix('owner')->name('owne
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-/*
-|--------------------------------------------------------------------------
-| Customer Routes
-|--------------------------------------------------------------------------
-*/
+//Customer Routes
+
 Route::middleware(['auth', CustomerMiddleware::class])->prefix('customer')->name('customer.')->group(function () {
     Route::get('/dashboard', [CustomerDashboardController::class, 'index'])->name('dashboard');
 
@@ -135,11 +117,8 @@ Route::middleware(['auth', CustomerMiddleware::class])->prefix('customer')->name
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-/*
-|--------------------------------------------------------------------------
-| Resepsionis Routes
-|--------------------------------------------------------------------------
-*/
+//Resepsionis Routes
+
 Route::middleware(['auth', ResepsionisMiddleware::class])->prefix('resepsionis')->name('resepsionis.')->group(function () {
     Route::get('/dashboard', [ResepsionisDashboardController::class, 'index'])->name('dashboard');
 
@@ -159,9 +138,4 @@ Route::middleware(['auth', ResepsionisMiddleware::class])->prefix('resepsionis')
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-/*
-|--------------------------------------------------------------------------
-| Auth Routes
-|--------------------------------------------------------------------------
-*/
 require __DIR__ . '/auth.php';
