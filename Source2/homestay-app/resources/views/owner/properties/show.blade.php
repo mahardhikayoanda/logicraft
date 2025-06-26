@@ -13,6 +13,10 @@
         <p><strong>Lokasi:</strong> {{ $property->location }}</p>
         <p><strong>Harga per malam:</strong> Rp{{ number_format($property->price_per_night, 0, ',', '.') }}</p>
         <p><strong>Fasilitas:</strong> {{ $property->facilities }}</p>
+        <div class="bg-white p-4 rounded shadow mt-6">
+            <h3 class="text-lg font-bold mb-4">📍 Lokasi Properti</h3>
+            <div id="map" class="w-full h-64 rounded"></div>
+        </div>
     </div>
 
     @if ($property->images->count())
@@ -35,3 +39,21 @@
         <a href="{{ route('owner.properties.index') }}" class="bg-gray-300 text-gray-800 px-4 py-2 rounded">Kembali</a>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const lat = {{ $property->latitude ?? '0' }};
+            const lng = {{ $property->longitude ?? '0' }};
+            const name = @json($property->name ?? 'Nama Properti');
+
+            let map = L.map('map').setView([lat, lng], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            L.marker([lat, lng]).addTo(map).bindPopup(name).openPopup();
+        });
+    </script>
+@endpush

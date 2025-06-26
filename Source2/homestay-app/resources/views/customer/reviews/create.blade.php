@@ -10,10 +10,15 @@
         @csrf
 
         <div class="mb-4">
-            <label for="rating" class="block font-semibold">Rating (1-5)</label>
-            <input type="number" name="rating" id="rating" min="1" max="5" value="{{ old('rating') }}"
-                class="w-full border p-2 rounded" required>
+            <label for="rating" class="block font-semibold mb-2">Rating</label>
+            <div id="star-rating" class="flex gap-1 text-2xl text-gray-300 cursor-pointer">
+                @for ($i = 1; $i <= 5; $i++)
+                    <span class="star" data-value="{{ $i }}">★</span>
+                @endfor
+            </div>
+            <input type="hidden" name="rating" id="rating" value="{{ old('rating', 0) }}" required>
         </div>
+
 
         <div class="mb-4">
             <label for="comment" class="block font-semibold">Komentar (Opsional)</label>
@@ -25,3 +30,39 @@
         </button>
     </form>
 @endsection
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const stars = document.querySelectorAll('#star-rating .star');
+        const ratingInput = document.getElementById('rating');
+
+        stars.forEach((star, index) => {
+            star.addEventListener('click', () => {
+                const value = star.getAttribute('data-value');
+                ratingInput.value = value;
+
+                // Update warna bintang
+                stars.forEach((s, i) => {
+                    s.classList.toggle('text-yellow-400', i < value);
+                    s.classList.toggle('text-gray-300', i >= value);
+                });
+            });
+
+            // Tambahkan hover (opsional)
+            star.addEventListener('mouseover', () => {
+                stars.forEach((s, i) => {
+                    s.classList.toggle('text-yellow-200', i <= index);
+                });
+            });
+
+            star.addEventListener('mouseout', () => {
+                const currentRating = ratingInput.value;
+                stars.forEach((s, i) => {
+                    s.classList.remove('text-yellow-200');
+                    s.classList.toggle('text-yellow-400', i < currentRating);
+                    s.classList.toggle('text-gray-300', i >= currentRating);
+                });
+            });
+        });
+    });
+</script>

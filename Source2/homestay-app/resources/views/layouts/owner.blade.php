@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <title>Dashboard Owner</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 
 <body class="flex min-h-screen bg-gray-100">
@@ -15,7 +18,8 @@
             <ul class="space-y-4">
                 <li><a href="{{ route('owner.dashboard') }}" class="hover:text-yellow-300">Dashboard</a></li>
                 <li><a href="{{ route('owner.properties.index') }}" class="hover:text-yellow-300">Properti Saya</a></li>
-                <li><a href="{{ route('owner.reports.index') }}" class="hover:text-yellow-300">Laporan Pembukuan</a></li>
+                <li><a href="{{ route('owner.reports.index') }}" class="hover:text-yellow-300">Laporan Pembukuan</a>
+                </li>
             </ul>
         </div>
 
@@ -32,6 +36,11 @@
     <main class="flex-1 p-8">
         @yield('content')
     </main>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    @stack('scripts') {{-- Untuk inject script dari halaman detail --}}
 </body>
 
 </html>

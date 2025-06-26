@@ -17,6 +17,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach ($properties as $property)
                     <div class="border p-4 rounded shadow-sm bg-white">
+                        {{-- Gambar Properti --}}
                         @if ($property->images->isNotEmpty() && file_exists(public_path('storage/' . $property->images->first()->image_path)))
                             <img src="{{ asset('storage/' . $property->images->first()->image_path) }}"
                                 alt="{{ $property->name }}" class="w-full h-64 object-cover rounded mb-3">
@@ -26,10 +27,30 @@
                             </div>
                         @endif
 
+                        {{-- Informasi Properti --}}
                         <h3 class="text-lg font-bold text-gray-800">{{ $property->name }}</h3>
                         <p class="text-sm text-gray-600">{{ $property->location }}</p>
-                        <p class="text-sm font-semibold">Rp. {{ number_format($property->price_per_night) }} / malam</p>
+                        <p class="text-sm font-semibold text-green-700">Rp {{ number_format($property->price_per_night) }} /
+                            malam</p>
 
+                        {{-- Rating Bintang --}}
+                        @php
+                            $reviews = $property->reservations->pluck('review')->filter();
+                            $avgRating = $reviews->avg('rating');
+                        @endphp
+
+                        @if ($avgRating)
+                            <p class="text-yellow-500 text-sm mt-1">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <span>{{ $i <= round($avgRating) ? '★' : '☆' }}</span>
+                                @endfor
+                                <span class="text-gray-600 text-xs ml-1">({{ number_format($avgRating, 1) }}/5)</span>
+                            </p>
+                        @else
+                            <p class="text-gray-500 text-sm mt-1 italic">Belum ada ulasan</p>
+                        @endif
+
+                        {{-- Tombol --}}
                         <a href="{{ route('customer.properties.show', $property->id) }}"
                             class="inline-block mt-3 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm">
                             Lihat Detail

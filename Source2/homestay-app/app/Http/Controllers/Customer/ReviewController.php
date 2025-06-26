@@ -33,7 +33,7 @@ class ReviewController extends Controller
             ->firstOrFail();
 
         $request->validate([
-            'rating' => 'required|integer|min:1|max:5',
+            'rating' => 'required|integer|between:1,5',
             'review' => 'nullable|string|max:1000',
         ]);
 

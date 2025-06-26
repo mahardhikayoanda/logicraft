@@ -1,27 +1,45 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="id">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <meta charset="UTF-8">
+    <title>@yield('title', 'LalokSumbar')</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    {{-- Tailwind CSS CDN --}}
+    <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net" />
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
-    <!-- Styles / Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- Tambahkan favicon dan font jika perlu --}}
 </head>
 
-<body class="bg-gray-100 font-sans text-gray-900 antialiased">
-    <div class="min-h-screen flex items-center justify-center px-4">
-        <div class="w-full max-w-4xl bg-white rounded-xl shadow-md overflow-hidden flex flex-col lg:flex-row">
-            {{ $slot }}
+<body class="bg-gray-100 text-gray-800">
+
+    {{-- Header --}}
+    <header class="bg-white shadow">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="{{ route('guest.properties.index') }}" class="text-xl font-bold text-green-600">
+                LalokSumbar
+            </a>
+            <nav class="space-x-4">
+                <a href="{{ route('guest.properties.index') }}" class="text-gray-700 hover:text-green-600">Beranda</a>
+                <a href="{{ route('login') }}" class="text-blue-600 hover:underline">Login</a>
+            </nav>
         </div>
-    </div>
+    </header>
+
+    {{-- Konten Utama --}}
+    <main class="container mx-auto px-4 py-8">
+        @yield('content')
+    </main>
+
+    {{-- Footer --}}
+    <footer class="bg-white border-t mt-12">
+        <div class="container mx-auto px-4 py-6 text-center text-sm text-gray-500">
+            &copy; {{ date('Y') }} LalokSumbar. Semua hak dilindungi.
+        </div>
+    </footer>
+
+    @stack('scripts')
 </body>
 
 </html>

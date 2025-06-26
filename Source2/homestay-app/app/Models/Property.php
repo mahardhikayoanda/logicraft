@@ -11,7 +11,16 @@ class Property extends Model
     //
     use HasFactory;
 
-    protected $fillable = ['owner_id', 'name', 'location', 'price_per_night', 'description', 'facilities'];
+    protected $fillable = [
+        'owner_id',
+        'name',
+        'location',
+        'latitude',
+        'longitude',
+        'price_per_night',
+        'description',
+        'facilities'
+    ];
 
     protected $casts = [
         'is_available' => 'boolean',

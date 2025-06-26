@@ -109,8 +109,25 @@ class ReservationController extends Controller
             'jumlah_tamu' => 'required|integer|min:1',
         ]);
 
-        $checkIn = \Carbon\Carbon::parse($request->check_in_date);
-        $checkOut = \Carbon\Carbon::parse($request->check_out_date);
+        $conflict = Reservation::where('property_id', $reservation->property_id)
+            ->where('id', '!=', $reservation->id) // abaikan reservasi ini sendiri
+            ->whereIn('status', ['confirmed', 'checked_in']) // hanya yang sudah aktif
+            ->where(function ($query) use ($request) {
+                $query->whereBetween('check_in_date', [$request->check_in_date, $request->check_out_date])
+                    ->orWhereBetween('check_out_date', [$request->check_in_date, $request->check_out_date])
+                    ->orWhere(function ($q) use ($request) {
+                        $q->where('check_in_date', '<=', $request->check_in_date)
+                            ->where('check_out_date', '>=', $request->check_out_date);
+                    });
+            })
+            ->exists();
+
+        if ($conflict) {
+            return back()->withErrors(['check_in_date' => 'Tanggal ini telah dipesan oleh tamu lain. Silakan pilih tanggal lain.'])->withInput();
+        }
+
+        $checkIn = Carbon::parse($request->check_in_date);
+        $checkOut = Carbon::parse($request->check_out_date);
         $days = $checkIn->diffInDays($checkOut);
         $totalPrice = $days * $reservation->property->price_per_night;
 
@@ -149,24 +166,23 @@ class ReservationController extends Controller
         return redirect()->route('customer.reservations.history')->with('success', 'Reservasi berhasil dibatalkan.');
     }
 
-    public function destroy($id)
+    public function destroy(Reservation $reservation)
     {
-        $reservation = Reservation::where('id', $id)
-            ->where('customer_id', Auth::id())
-            ->firstOrFail();
+        // Optional: pastikan user yang menghapus adalah pemiliknya
+        if ($reservation->customer_id !== Auth::id()) {
+            abort(403);
+        }
 
-        if ($reservation->status !== 'canceled') {
-            return redirect()->back()->with('error', 'Hanya reservasi yang dibatalkan yang dapat dihapus.');
+        // Optional: batasi hanya bisa menghapus jika status tertentu
+        if (!in_array($reservation->status, ['pending', 'canceled', 'confirmed'])) {
+            return back()->with('error', 'Reservasi tidak dapat dihapus.');
         }
 
         $reservation->delete();
 
-        $reservation->property->update([
-            'is_available' => true
-        ]);
-
-        return redirect()->route('customer.reservations.history')->with('success', 'Reservasi berhasil dihapus.');
+        return back()->with('success', 'Reservasi berhasil dihapus.');
     }
+
 
     public function show($id)
     {

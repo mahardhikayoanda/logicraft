@@ -25,7 +25,7 @@
         </div>
     </div>
 
-    <!-- Section Promosi (dipindah ke atas) -->
+    <!-- Section Promosi -->
     <section class="my-6">
         <h2 class="text-xl font-semibold mb-4">Promosi Aktif</h2>
 
@@ -37,8 +37,7 @@
                     <div class="bg-white rounded shadow p-4">
                         @if ($promo->image_path)
                             <img src="{{ asset('storage/' . $promo->image_path) }}"
-                                class="w-full h-40 object-cover rounded mb-3"
-                                alt="{{ $promo->title }}">
+                                class="w-full h-40 object-cover rounded mb-3" alt="{{ $promo->title }}">
                         @endif
                         <h3 class="text-lg font-bold">{{ $promo->title }}</h3>
                         <p class="text-sm text-gray-600 mb-1">
@@ -76,6 +75,23 @@
                         <h3 class="text-lg font-bold">{{ $property->name }}</h3>
                         <p class="text-sm text-gray-600">{{ $property->location }}</p>
                         <p class="text-sm">Rp. {{ number_format($property->price_per_night) }} / malam</p>
+
+                        @php
+                            $reviews = $property->reservations->pluck('review')->filter();
+                            $avgRating = $reviews->avg('rating');
+                        @endphp
+
+                        @if ($avgRating)
+                            <p class="text-yellow-500 text-sm mt-1">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <span>{{ $i <= round($avgRating) ? '★' : '☆' }}</span>
+                                @endfor
+                                <span class="text-gray-600 text-xs ml-1">({{ number_format($avgRating, 1) }}/5)</span>
+                            </p>
+                        @else
+                            <p class="text-gray-500 text-sm mt-1 italic">Belum ada ulasan</p>
+                        @endif
+
                         <a href="{{ route('customer.properties.show', $property->id) }}"
                             class="inline-block mt-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
                             Detail

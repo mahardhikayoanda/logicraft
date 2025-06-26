@@ -5,7 +5,7 @@
 
     <div class="bg-white shadow p-4 rounded mb-6">
         <p><strong>Total Properti:</strong> {{ $totalProperties }}</p>
-        <p><strong>Total Reservasi:</strong> {{ $totalReservations }}</p>
+        <p><strong>Total Reservasi (yang sudah dibayar):</strong> {{ $totalReservations }}</p>
         <p><strong>Total Pendapatan:</strong> Rp{{ number_format($totalIncome, 0, ',', '.') }}</p>
     </div>
 
@@ -15,17 +15,23 @@
         <thead class="bg-gray-100">
             <tr>
                 <th class="border px-4 py-2 text-left">Nama Properti</th>
-                <th class="border px-4 py-2 text-left">Jumlah Reservasi</th>
+                <th class="border px-4 py-2 text-left">Jumlah Reservasi Dibayar</th>
                 <th class="border px-4 py-2 text-left">Total Pendapatan</th>
             </tr>
         </thead>
         <tbody>
             @forelse ($properties as $property)
+                @php
+                    $paidReservations = $property->reservations->where('status', 'confirmed');
+                    $paidCount = $paidReservations->count();
+                    $paidIncome = $paidReservations->sum('total_price');
+                @endphp
                 <tr>
                     <td class="border px-4 py-2">{{ $property->name }}</td>
-                    <td class="border px-4 py-2">{{ $property->reservations->count() }}</td>
+                    <td class="border px-4 py-2">{{ $paidCount }}</td>
                     <td class="border px-4 py-2">
-                        Rp{{ number_format($property->reservations->sum('total_price'), 0, ',', '.') }}</td>
+                        Rp{{ number_format($paidIncome, 0, ',', '.') }}
+                    </td>
                 </tr>
             @empty
                 <tr>
