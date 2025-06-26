@@ -27,7 +27,7 @@
 
     <!-- Section Promosi -->
     <section class="my-6">
-        <h2 class="text-xl font-semibold mb-4">Promosi Aktif</h2>
+        <h2 class="text-xl font-semibold mb-4">Iklan Aktif</h2>
 
         @if ($promotions->isEmpty())
             <p class="text-gray-500">Tidak ada promosi saat ini.</p>

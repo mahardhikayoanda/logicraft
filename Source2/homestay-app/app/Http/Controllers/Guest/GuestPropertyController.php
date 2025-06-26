@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
 use App\Models\Property;
+use App\Models\Promotion;
 use Illuminate\Http\Request;
 
 class GuestPropertyController extends Controller
@@ -19,7 +20,12 @@ class GuestPropertyController extends Controller
 
         $properties = $query->latest()->paginate(6);
 
-        return view('guest.properties.index', compact('properties'));
+        $promotions = Promotion::whereDate('start_date', '<=', now())
+            ->whereDate('end_date', '>=', now())
+            ->latest()
+            ->get();
+
+        return view('guest.properties.index', compact('properties', 'promotions'));
     }
 
     public function show($id)
