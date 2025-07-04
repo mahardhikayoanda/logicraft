@@ -35,7 +35,8 @@ use App\Http\Controllers\Resepsionis\ReservationController as ResepsionisReserva
 use App\Http\Middleware\ResepsionisMiddleware;
 
 //Route guest
-Route::get('/', [GuestPropertyController::class, 'index'])->name('guest.properties.index');
+Route::get('/', [GuestPropertyController::class, 'home'])->name('guest.home');
+Route::get('/guest/properties', [GuestPropertyController::class, 'index'])->name('guest.properties.index');
 Route::get('/property/{id}', [GuestPropertyController::class, 'show'])->name('guest.properties.show');
 
 
@@ -92,7 +93,7 @@ Route::middleware(['auth', CustomerMiddleware::class])->prefix('customer')->name
 
     // Reservation
     Route::get('/reservations/create/{property}', [ReservationController::class, 'create'])->name('reservations.create');
-    Route::post('/properties/{property}/reserve', [ReservationController::class, 'store'])->name('reservations.store');
+    Route::post('/properties/{property}/reservations', [ReservationController::class, 'store'])->name('reservations.store');
     Route::get('/reservations/history', [ReservationController::class, 'history'])->name('reservations.history');
     Route::get('/reservations/{reservation}', [ReservationController::class, 'show'])->name('reservations.show');
     Route::get('/reservations/{reservation}/edit', [ReservationController::class, 'edit'])->name('reservations.edit');

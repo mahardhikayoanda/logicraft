@@ -23,6 +23,11 @@ class Reservation extends Model
         'jumlah_tamu',
     ];
 
+    protected $casts = [
+        'check_in_date' => 'datetime',
+        'check_out_date' => 'datetime',
+    ];
+
     public function customer()
     {
         return $this->belongsTo(User::class, 'customer_id');

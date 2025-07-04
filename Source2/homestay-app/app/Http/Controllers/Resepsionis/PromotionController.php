@@ -10,7 +10,7 @@ class PromotionController extends Controller
 {
     public function index()
     {
-        $promotions = Promotion::all();
+        $promotions = Promotion::latest()->paginate(12);
         return view('resepsionis.promotions.index', compact('promotions'));
     }
 

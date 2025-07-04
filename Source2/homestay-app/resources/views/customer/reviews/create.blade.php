@@ -3,66 +3,157 @@
 @section('title', 'Tulis Ulasan')
 
 @section('content')
-    <h2 class="text-xl font-bold mb-4">Ulasan untuk {{ $reservation->property->name }}</h2>
-
-    <form action="{{ route('customer.reviews.store', $reservation->id) }}" method="POST"
-        class="bg-white p-6 rounded shadow max-w-xl">
-        @csrf
-
-        <div class="mb-4">
-            <label for="rating" class="block font-semibold mb-2">Rating</label>
-            <div id="star-rating" class="flex gap-1 text-2xl text-gray-300 cursor-pointer">
-                @for ($i = 1; $i <= 5; $i++)
-                    <span class="star" data-value="{{ $i }}">★</span>
-                @endfor
+    <div class="max-w-2xl mx-auto p-4">
+        <div class="bg-white rounded-xl shadow-md overflow-hidden p-6">
+            <div class="flex items-center mb-6">
+                @if ($reservation->property->images->first())
+                    <img src="{{ asset('storage/' . $reservation->property->images->first()->image_path) }}"
+                        alt="{{ $reservation->property->name }}" class="w-20 h-20 object-cover rounded-lg mr-4">
+                @endif
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800">Ulasan untuk {{ $reservation->property->name }}</h2>
+                    <p class="text-gray-600">{{ $reservation->property->location }}</p>
+                </div>
             </div>
-            <input type="hidden" name="rating" id="rating" value="{{ old('rating', 0) }}" required>
+
+            <form action="{{ route('customer.reviews.store', $reservation->id) }}" method="POST" id="reviewForm">
+                @csrf
+
+                <div class="mb-8">
+                    <label class="block text-lg font-semibold text-gray-700 mb-3">Bagaimana pengalaman Anda?</label>
+                    <div class="flex items-center mb-2">
+                        <div id="star-rating" class="flex gap-1">
+                            @for ($i = 1; $i <= 5; $i++)
+                                <span
+                                    class="star w-8 h-8 cursor-pointer text-4xl
+                                    @if (old('rating', 0) >= $i) text-yellow-400 @else text-gray-300 @endif"
+                                    data-value="{{ $i }}">★</span>
+                            @endfor
+                        </div>
+                        <span id="rating-text" class="ml-2 text-gray-600 font-medium">
+                            @switch(old('rating', 0))
+                                @case(1)
+                                    Buruk
+                                @break
+
+                                @case(2)
+                                    Cukup
+                                @break
+
+                                @case(3)
+                                    Baik
+                                @break
+
+                                @case(4)
+                                    Sangat Baik
+                                @break
+
+                                @case(5)
+                                    Luar Biasa
+                                @break
+                            @endswitch
+                        </span>
+                    </div>
+                    <input type="hidden" name="rating" id="rating-input" value="{{ old('rating', 0) }}" required>
+                    @error('rating')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="mb-8">
+                    <label for="comment" class="block text-lg font-semibold text-gray-700 mb-3">Tambahkan komentar
+                        (opsional)</label>
+                    <textarea name="comment" id="comment" rows="5"
+                        class="w-full border border-gray-300 rounded-lg p-4 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                        placeholder="Bagikan pengalaman Anda menginap di tempat ini...">{{ old('comment') }}</textarea>
+                    @error('comment')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="flex justify-end space-x-4">
+                    <a href="{{ url()->previous() }}"
+                        class="px-6 py-3 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+                        Batal
+                    </a>
+                    <button type="submit"
+                        class="px-6 py-3 bg-green-600 hover:bg-green-700 rounded-lg font-medium text-white shadow-sm transition-colors">
+                        Kirim Ulasan
+                    </button>
+                </div>
+            </form>
         </div>
-
-
-        <div class="mb-4">
-            <label for="comment" class="block font-semibold">Komentar (Opsional)</label>
-            <textarea name="comment" id="comment" rows="4" class="w-full border p-2 rounded">{{ old('comment') }}</textarea>
-        </div>
-
-        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">
-            Kirim Ulasan
-        </button>
-    </form>
+    </div>
 @endsection
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const stars = document.querySelectorAll('#star-rating .star');
-        const ratingInput = document.getElementById('rating');
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const stars = document.querySelectorAll('.star');
+            const ratingInput = document.getElementById('rating-input');
+            const ratingText = document.getElementById('rating-text');
 
-        stars.forEach((star, index) => {
-            star.addEventListener('click', () => {
-                const value = star.getAttribute('data-value');
-                ratingInput.value = value;
+            const ratingDescriptions = {
+                1: "Buruk",
+                2: "Cukup",
+                3: "Baik",
+                4: "Sangat Baik",
+                5: "Luar Biasa"
+            };
 
-                // Update warna bintang
-                stars.forEach((s, i) => {
-                    s.classList.toggle('text-yellow-400', i < value);
-                    s.classList.toggle('text-gray-300', i >= value);
+            // Initialize from old input
+            if (ratingInput.value > 0) {
+                updateRatingDisplay(ratingInput.value);
+            }
+
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const rating = this.getAttribute('data-value');
+                    ratingInput.value = rating;
+                    updateRatingDisplay(rating);
+                    console.log('Rating selected:', rating);
+                });
+
+                star.addEventListener('mouseover', function() {
+                    const rating = this.getAttribute('data-value');
+                    highlightStars(rating);
+                });
+
+                star.addEventListener('mouseout', function() {
+                    highlightStars(ratingInput.value);
                 });
             });
 
-            // Tambahkan hover (opsional)
-            star.addEventListener('mouseover', () => {
-                stars.forEach((s, i) => {
-                    s.classList.toggle('text-yellow-200', i <= index);
+            function highlightStars(rating) {
+                stars.forEach(star => {
+                    const starValue = star.getAttribute('data-value');
+                    if (starValue <= rating) {
+                        star.classList.add('text-yellow-400');
+                        star.classList.remove('text-gray-300');
+                    } else {
+                        star.classList.add('text-gray-300');
+                        star.classList.remove('text-yellow-400');
+                    }
                 });
-            });
+            }
 
-            star.addEventListener('mouseout', () => {
-                const currentRating = ratingInput.value;
-                stars.forEach((s, i) => {
-                    s.classList.remove('text-yellow-200');
-                    s.classList.toggle('text-yellow-400', i < currentRating);
-                    s.classList.toggle('text-gray-300', i >= currentRating);
-                });
-            });
+            function updateRatingDisplay(rating) {
+                highlightStars(rating);
+                ratingText.textContent = ratingDescriptions[rating] || '';
+            }
         });
-    });
-</script>
+    </script>
+@endpush
+
+@push('styles')
+    <style>
+        .star {
+            transition: all 0.2s ease;
+            display: inline-block;
+        }
+
+        .star:hover {
+            transform: scale(1.1);
+        }
+    </style>
+@endpush

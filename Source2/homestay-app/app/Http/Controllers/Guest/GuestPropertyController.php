@@ -18,28 +18,48 @@ class GuestPropertyController extends Controller
                 ->orWhere('location', 'like', "%{$search}%");
         }
 
-        $properties = $query->latest()->paginate(6);
+        $properties = $query->latest()->paginate(12);
 
-        $promotions = Promotion::whereDate('start_date', '<=', now())
-            ->whereDate('end_date', '>=', now())
-            ->latest()
-            ->get();
-
-        return view('guest.properties.index', compact('properties', 'promotions'));
+        return view('guest.properties.index', compact('properties'));
     }
 
     public function show($id)
     {
         $property = Property::with('images')->findOrFail($id);
-        return view('guest.properties.show', compact('property'));
+        $property->load([
+            'images',
+            'reservations.review.customer'
+        ]);
+
+        // Ambil semua ulasan dari properti ini
+        $reviews = $property->reservations
+            ->pluck('review')
+            ->filter(); // Hilangkan null
+
+        $averageRating = $reviews->avg('rating');
+        return view('guest.properties.show', compact('property', 'averageRating', 'reviews'));
     }
 
-    public function checkAvailability($id)
+    public function home(Request $request)
     {
-        $property = Property::findOrFail($id);
-        return response()->json([
-            'available' => $property->is_available,
-            'message' => $property->is_available ? 'Tersedia' : 'Sudah dipesan'
-        ]);
+        $promotions = Promotion::whereDate('start_date', '<=', now())
+            ->whereDate('end_date', '>=', now())
+            ->latest()
+            ->get();
+
+        $query = Property::with('images')
+            ->where('is_available', true)
+            ->latest();
+
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('location', 'like', "%{$search}%");
+            });
+        }
+
+        $properties = $query->paginate(6);
+
+        return view('guest.home', compact('promotions', 'properties'));
     }
 }

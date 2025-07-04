@@ -13,7 +13,7 @@ class PropertyController extends Controller
 {
     public function index()
     {
-        $properties = Property::where('owner_id', Auth::id())->latest()->get();
+        $properties = Property::where('owner_id', Auth::id())->latest()->paginate(9);
         return view('owner.properties.index', compact('properties'));
     }
 

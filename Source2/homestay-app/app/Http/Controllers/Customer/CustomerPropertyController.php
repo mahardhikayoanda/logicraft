@@ -10,7 +10,7 @@ class CustomerPropertyController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Property::with('images'); // Load relasi gambar
+        $query = Property::query()->with('images'); // Mulai dengan query builder
 
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -20,7 +20,7 @@ class CustomerPropertyController extends Controller
             });
         }
 
-        $properties = $query->latest()->get();
+        $properties = $query->latest()->paginate(12); // Panggil paginate di akhir
 
         return view('customer.properties.index', compact('properties'));
     }

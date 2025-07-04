@@ -26,7 +26,6 @@ class ReportController extends Controller
             return $property->reservations->where('status', 'confirmed')->sum('total_price');
         });
 
-
         return view('owner.report.index', compact(
             'properties',
             'totalProperties',

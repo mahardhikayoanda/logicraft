@@ -77,9 +77,17 @@ class ReservationController extends Controller
 
 
 
-    public function history()
+    public function history(Request $request)
     {
-        $reservations = Reservation::with('property')->where('customer_id', Auth::id())->latest()->get();
+        $status = $request->query('status');
+
+        $reservations = Reservation::with('property')->where('customer_id', Auth::id())->when($status, function ($query) use ($status) {
+            return $query->where('status', $status);
+        })
+            ->with(['property', 'property.images', 'review'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(6);
+
         return view('customer.reservations.history', compact('reservations'));
     }
 
