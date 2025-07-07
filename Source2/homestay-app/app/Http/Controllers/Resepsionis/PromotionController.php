@@ -27,7 +27,7 @@ class PromotionController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|max:2048', // max 2MB
+            'image' => 'nullable|image|max:5120',
         ]);
 
         $data = $request->only(['title', 'start_date', 'end_date', 'description']);
@@ -55,7 +55,7 @@ class PromotionController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:5120',
         ]);
 
         $data = $request->only(['title', 'start_date', 'end_date', 'description']);
