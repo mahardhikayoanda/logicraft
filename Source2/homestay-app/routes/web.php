@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardRedirectController;
+use App\Http\Controllers\SocialController;
 
 // Guest
 use App\Http\Controllers\Guest\GuestPropertyController;
@@ -33,6 +34,10 @@ use App\Http\Controllers\Resepsionis\PromotionController;
 use App\Http\Controllers\Resepsionis\PropertyController as ReceptionistPropertyController;
 use App\Http\Controllers\Resepsionis\ReservationController as ResepsionisReservationController;
 use App\Http\Middleware\ResepsionisMiddleware;
+
+//Regits or Login with Google
+Route::get('auth/redirect', [SocialController::class, 'googleRedirect']);
+Route::get('auth/callback', [SocialController::class, 'loginWithGoogle']);
 
 //Route guest
 Route::get('/', [GuestPropertyController::class, 'home'])->name('guest.home');
