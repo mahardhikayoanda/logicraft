@@ -15,7 +15,7 @@ class UserController extends Controller
     // Tampilkan semua user
     public function index()
     {
-        $users = User::orderBy('name')->get();
+        $users = User::orderBy('name')->latest()->paginate(25);
         return view('admin.users.index', compact('users'));
     }
 
@@ -82,7 +82,7 @@ class UserController extends Controller
 
     public function indexByRole($role)
     {
-        $users = User::where('role', $role)->get();
+        $users = User::where('role', $role)->latest()->paginate(25);
         return view('admin.users.index_by_role', compact('users', 'role'));
     }
 
@@ -97,9 +97,9 @@ class UserController extends Controller
         $totalProperties = $properties->count();
 
         // Hitung total pendapatan dari semua reservasi yang statusnya selesai
-        $totalIncome = Reservation::whereIn('property_id', $properties->pluck('id'))
-            ->where('status', 'selesai')
-            ->sum('total_price');
+        $totalIncome = $properties->sum(function ($property) {
+            return $property->reservations->where('status', 'confirmed')->sum('total_price');
+        });
 
         // Kirim semua variabel ke blade
         return view('admin.users.detail_owner', compact(

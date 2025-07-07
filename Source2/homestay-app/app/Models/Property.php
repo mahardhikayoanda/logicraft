@@ -11,7 +11,16 @@ class Property extends Model
     //
     use HasFactory;
 
-    protected $fillable = ['owner_id', 'name', 'location', 'price_per_night', 'description', 'facilities'];
+    protected $fillable = [
+        'owner_id',
+        'name',
+        'location',
+        'latitude',
+        'longitude',
+        'price_per_night',
+        'description',
+        'facilities'
+    ];
 
     protected $casts = [
         'is_available' => 'boolean',
@@ -38,7 +47,10 @@ class Property extends Model
         return $this->belongsToMany(User::class, 'wishlists', 'property_id', 'customer_id')->withTimestamps();
     }
 
-
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, Reservation::class);
+    }
 
     public function isBookedOn($checkIn, $checkOut)
     {

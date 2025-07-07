@@ -19,11 +19,11 @@ class ReportController extends Controller
         $totalProperties = $properties->count();
 
         $totalReservations = $properties->sum(function ($property) {
-            return $property->reservations->count();
+            return $property->reservations->where('status', 'confirmed')->count();
         });
 
         $totalIncome = $properties->sum(function ($property) {
-            return $property->reservations->sum('total_price');
+            return $property->reservations->where('status', 'confirmed')->sum('total_price');
         });
 
         return view('owner.report.index', compact(

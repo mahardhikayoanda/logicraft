@@ -30,6 +30,12 @@ class UserSeeder extends Seeder
             'role' => 'customer',
         ]);
 
+        User::factory()->create([
+            'name' => 'Resepsionis User',
+            'email' => 'resepsionis@example.com',
+            'role' => 'resepsionis',
+        ]);
+
         // Tambahan: generate 10 customer random
         User::factory()->count(10)->create([
             'role' => 'customer',
