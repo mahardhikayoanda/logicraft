@@ -167,16 +167,7 @@
                                             Ulasan
                                         </a>
                                     @endif
-
-                                    <form action="{{ route('customer.reservations.destroy', $reservation->id) }}"
-                                        method="POST">
-                                        @csrf @method('DELETE')
-                                        <button type="submit"
-                                            onclick="return confirm('Yakin ingin menghapus reservasi ini?')"
-                                            class="inline-flex items-center px-2.5 py-1 border border-gray-300 shadow-sm text-xxs md:text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50">
-                                            Hapus
-                                        </button>
-                                    </form>
+                                    
                                 @elseif ($reservation->status === 'canceled')
                                     <form action="{{ route('customer.reservations.destroy', $reservation->id) }}"
                                         method="POST">

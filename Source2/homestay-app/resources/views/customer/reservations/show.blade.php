@@ -177,19 +177,7 @@
             data-client-key="{{ config('services.midtrans.client_key') }}"></script>
         <script>
             document.getElementById('pay-button').addEventListener('click', function() {
-                snap.pay('{{ $snapToken }}', {
-                    onSuccess: function(result) {
-                        window.location.href =
-                            "{{ route('customer.reservations.callback', $reservation->id) }}" +
-                            "?result=" + encodeURIComponent(JSON.stringify(result));
-                    },
-                    onPending: function(result) {
-                        alert('Pembayaran tertunda: ' + result.status_message);
-                    },
-                    onError: function(result) {
-                        alert('Pembayaran gagal: ' + result.status_message);
-                    }
-                });
+                snap.pay('{{ $snapToken }}');
             });
         </script>
     @endif

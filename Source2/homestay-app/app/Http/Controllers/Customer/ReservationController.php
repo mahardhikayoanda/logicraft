@@ -232,21 +232,21 @@ class ReservationController extends Controller
     }
 
     // Callback setelah Snap window tutup / sukses
-    public function paymentCallback(Request $request, $id)
-    {
-        // Midtrans mengembalikan result di query string ?result={JSON}
-        $result = json_decode($request->query('result'), true);
+    // public function paymentCallback(Request $request, $id)
+    // {
+    //     // Midtrans mengembalikan result di query string ?result={JSON}
+    //     $result = json_decode($request->query('result'), true);
 
-        if (in_array($result['transaction_status'], ['capture', 'settlement'])) {
-            $reservation = Reservation::findOrFail($id);
-            $reservation->update([
-                'status'         => 'confirmed',
-                'payment_type'   => $result['payment_type'] ?? null,
-                'transaction_id' => $result['transaction_id'] ?? null,
-                'payment_data'   => $result,   // simpan full JSON jika mau
-            ]);
-        }
+    //     if (in_array($result['transaction_status'], ['capture', 'settlement'])) {
+    //         $reservation = Reservation::findOrFail($id);
+    //         $reservation->update([
+    //             'status'         => 'confirmed',
+    //             'payment_type'   => $result['payment_type'] ?? null,
+    //             'transaction_id' => $result['transaction_id'] ?? null,
+    //             'payment_data'   => $result,   // simpan full JSON jika mau
+    //         ]);
+    //     }
 
-        return redirect()->route('customer.reservations.history', $id)->with('success', 'Pembayaran berhasil diproses.');
-    }
+    //     return redirect()->route('customer.reservations.history', $id)->with('success', 'Pembayaran berhasil diproses.');
+    // }
 }

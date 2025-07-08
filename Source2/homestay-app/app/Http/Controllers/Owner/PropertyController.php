@@ -30,7 +30,7 @@ class PropertyController extends Controller
             'price_per_night'   => 'required|numeric',
             'location'          => 'required',
             'facilities'        => 'required',
-            'images.*'          => 'image|mimes:jpg,jpeg,png|max:,5120',
+            'images.*'          => 'image|mimes:jpg,jpeg,png|max:5120',
             'latitude'          => 'required|numeric',
             'longitude'         => 'required|numeric'
         ]);

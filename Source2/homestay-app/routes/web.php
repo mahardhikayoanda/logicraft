@@ -26,6 +26,7 @@ use App\Http\Controllers\Customer\CustomerPropertyController;
 use App\Http\Controllers\Customer\ReservationController;
 use App\Http\Controllers\Customer\WishlistController;
 use App\Http\Controllers\Customer\ReviewController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Middleware\CustomerMiddleware;
 
 // Resepsionis
@@ -38,6 +39,7 @@ use App\Http\Middleware\ResepsionisMiddleware;
 //Regits or Login with Google
 Route::get('auth/redirect', [SocialController::class, 'googleRedirect']);
 Route::get('auth/callback', [SocialController::class, 'loginWithGoogle']);
+Route::post('reservations/payment-callback', [PaymentController::class, 'callback'])->name('reservations.callback');
 
 //Route guest
 Route::get('/', [GuestPropertyController::class, 'home'])->name('guest.home');
@@ -105,7 +107,6 @@ Route::middleware(['auth', CustomerMiddleware::class])->prefix('customer')->name
     Route::put('/reservations/{reservation}', [ReservationController::class, 'update'])->name('reservations.update');
     Route::put('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])->name('reservations.cancel');
     Route::delete('/reservations/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
-    Route::get('/reservations/{reservation}/payment-callback', [ReservationController::class, 'paymentCallback'])->name('reservations.callback');
 
     // Wishlist
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
