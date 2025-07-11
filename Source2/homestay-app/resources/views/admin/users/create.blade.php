@@ -71,10 +71,7 @@
                             class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 border">
                             <option value="" disabled selected>Pilih Role User</option>
                             <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Admin</option>
-                            <option value="owner" {{ old('role') === 'owner' ? 'selected' : '' }}>Owner</option>
-                            <option value="resepsionis" {{ old('role') === 'resepsionis' ? 'selected' : '' }}>Resepsionis
-                            </option>
-                            <option value="customer" {{ old('role') === 'customer' ? 'selected' : '' }}>Customer</option>
+                            <option value="resepsionis" {{ old('role') === 'resepsionis' ? 'selected' : '' }}>Resepsionis</option>
                         </select>
                     </div>
                     @error('role')

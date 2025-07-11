@@ -64,10 +64,9 @@
         </p>
 
         <!-- Flash Message Error -->
-        @if (session('error'))
-            <div
-                class="mb-4 bg-red-100 text-red-700 p-3 rounded-lg border border-red-300 shadow-md transition-transform hover:scale-105">
-                {{ session('error') }}
+        @if ($errors->any())
+            <div class="mb-4 bg-red-100 text-red-700 p-3 rounded-lg border border-red-300 shadow-md">
+                {{ $errors->first('email') }}
             </div>
         @endif
 
