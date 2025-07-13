@@ -1,59 +1,96 @@
 @extends('layouts.admin')
 
+@section('header', 'Tambah User Baru')
+
 @section('content')
-    <h1 class="text-2xl font-bold text-gray-800 mb-6">Tambah User</h1>
-
-    <form action="{{ route('admin.users.store') }}" method="POST" class="bg-white p-6 rounded-lg shadow-md w-full max-w-xl">
-        @csrf
-
-        {{-- Nama --}}
-        <div class="mb-4">
-            <label for="name" class="block font-semibold mb-1">Nama</label>
-            <input type="text" id="name" name="name" class="w-full border border-gray-300 px-3 py-2 rounded"
-                required value="{{ old('name') }}">
-            @error('name')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
+    <div class="bg-white rounded-lg shadow overflow-hidden max-w-2xl mx-auto">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-800">Form Tambah User</h2>
         </div>
 
-        {{-- Email --}}
-        <div class="mb-4">
-            <label for="email" class="block font-semibold mb-1">Email</label>
-            <input type="email" id="email" name="email" class="w-full border border-gray-300 px-3 py-2 rounded"
-                required value="{{ old('email') }}">
-            @error('email')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
-        </div>
+        <form action="{{ route('admin.users.store') }}" method="POST" class="p-6">
+            @csrf
 
-        {{-- Password --}}
-        <div class="mb-4">
-            <label for="password" class="block font-semibold mb-1">Password</label>
-            <input type="password" id="password" name="password" class="w-full border border-gray-300 px-3 py-2 rounded"
-                required>
-            @error('password')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
-        </div>
+            <div class="space-y-6">
+                <!-- Name Field -->
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
+                    <div class="mt-1 relative rounded-md shadow-sm">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-user text-gray-400"></i>
+                        </div>
+                        <input type="text" id="name" name="name" value="{{ old('name') }}"
+                            class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 border"
+                            placeholder="John Doe" required>
+                    </div>
+                    @error('name')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
 
-        {{-- Role --}}
-        <div class="mb-6">
-            <label for="role" class="block font-semibold mb-1">Role</label>
-            <select id="role" name="role" class="w-full border border-gray-300 px-3 py-2 rounded" required>
-                <option value="" disabled selected>Pilih Role</option>
-                <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Admin</option>
-                <option value="owner" {{ old('role') === 'owner' ? 'selected' : '' }}>Owner</option>
-                <option value="receptionist" {{ old('role') === 'receptionist' ? 'selected' : '' }}>Resepsionis</option>
-                <option value="customer" {{ old('role') === 'customer' ? 'selected' : '' }}>Customer</option>
-            </select>
-            @error('role')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-            @enderror
-        </div>
+                <!-- Email Field -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Alamat Email</label>
+                    <div class="mt-1 relative rounded-md shadow-sm">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-envelope text-gray-400"></i>
+                        </div>
+                        <input type="email" id="email" name="email" value="{{ old('email') }}"
+                            class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 border"
+                            placeholder="email@example.com" required>
+                    </div>
+                    @error('email')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
 
-        <div class="flex items-center">
-            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Simpan</button>
-            <a href="{{ route('admin.users.index') }}" class="ml-4 text-gray-600 hover:underline">Batal</a>
-        </div>
-    </form>
+                <!-- Password Field -->
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <div class="mt-1 relative rounded-md shadow-sm">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-lock text-gray-400"></i>
+                        </div>
+                        <input type="password" id="password" name="password"
+                            class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 border"
+                            placeholder="Minimal 8 karakter" required>
+                    </div>
+                    @error('password')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Role Selection -->
+                <div>
+                    <label for="role" class="block text-sm font-medium text-gray-700 mb-1">Role User</label>
+                    <div class="mt-1 relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-user-tag text-gray-400"></i>
+                        </div>
+                        <select id="role" name="role" required
+                            class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 border">
+                            <option value="" disabled selected>Pilih Role User</option>
+                            <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Admin</option>
+                            <option value="resepsionis" {{ old('role') === 'resepsionis' ? 'selected' : '' }}>Resepsionis</option>
+                        </select>
+                    </div>
+                    @error('role')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="mt-8 flex justify-end space-x-3">
+                <a href="{{ route('admin.users.index') }}"
+                    class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <i class="fas fa-times mr-2"></i> Batal
+                </a>
+                <button type="submit"
+                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <i class="fas fa-save mr-2"></i> Simpan User
+                </button>
+            </div>
+        </form>
+    </div>
 @endsection

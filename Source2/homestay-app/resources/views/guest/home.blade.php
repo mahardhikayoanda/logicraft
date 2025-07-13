@@ -1,4 +1,4 @@
-@extends('layouts.customer')
+@extends('layouts.guest')
 
 @section('title', 'Temukan Penginapan Anda')
 
@@ -19,7 +19,7 @@
                 <!-- Search Box -->
                 <div
                     class="bg-white/90 backdrop-blur-sm p-4 rounded-xl shadow-2xl animate-fadeIn delay-200 transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
-                    <form action="{{ route('customer.properties.index') }}" method="GET"
+                    <form action="{{ route('guest.properties.index') }}" method="GET"
                         class="flex flex-col md:flex-row gap-2">
                         <div class="flex-1">
                             <label for="location" class="sr-only">Lokasi</label>
@@ -66,7 +66,7 @@
                 @if ($promotions->count() > 3)
                     <div class="flex gap-2">
                         <button
-                            class="promo-prev-btn p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-all duration-200 shadow-sm opacity-50 cursor-not-allowed">
+                            class="promo-prev-btn p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-all duration-200 shadow-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd"
                                     d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
@@ -172,7 +172,7 @@
                     <h3 class="mt-4 text-lg font-medium text-gray-900">Tidak ada properti tersedia</h3>
                     <p class="mt-1 text-gray-500">Silakan coba filter pencarian yang berbeda.</p>
                     <div class="mt-6">
-                        <a href="{{ route('customer.properties.index') }}"
+                        <a href="{{ route('guest.properties.index') }}"
                             class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 transition-all duration-300">
                             Lihat Semua Properti
                         </a>
@@ -242,7 +242,7 @@
                                                 class="text-gray-500 font-normal">/malam</span>
                                         </p>
                                     </div>
-                                    <a href="{{ route('customer.properties.show', $property->id) }}"
+                                    <a href="{{ route('guest.properties.show', $property->id) }}"
                                         class="inline-flex items-center px-3 py-1.5 border border-red-600 text-sm font-medium rounded-md text-red-600 bg-white hover:bg-red-50 hover:text-red-700 transition-all duration-200">
                                         Lihat Detail
                                     </a>
@@ -253,7 +253,7 @@
                 </div>
 
                 <div class="mt-12 text-center">
-                    <a href="{{ route('customer.properties.index') }}"
+                    <a href="{{ route('guest.properties.index') }}"
                         class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-lg text-white bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 transition-all duration-300 hover:shadow-xl">
                         Lihat Semua Properti
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24"
@@ -272,7 +272,7 @@
                 <h2 class="text-2xl md:text-3xl font-bold mb-4">Siap untuk Petualangan di Sumatera Barat?</h2>
                 <p class="text-lg mb-6 opacity-90">Temukan penginapan terbaik untuk liburan tak terlupakan Anda.</p>
                 <div class="flex justify-center">
-                    <a href="{{ route('customer.properties.index') }}"
+                    <a href="{{ route('guest.properties.index') }}"
                         class="px-8 py-3 bg-white text-red-600 font-semibold rounded-lg hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                         Jelajahi Properti
                     </a>
@@ -354,19 +354,13 @@
         .swiper {
             width: 100%;
             height: 100%;
-            margin-left: auto;
-            margin-right: auto;
-            overflow: hidden;
         }
 
         .swiper-wrapper {
             display: flex;
             width: 100%;
             height: 100%;
-            position: relative;
-            z-index: 1;
-            transition-property: transform;
-            box-sizing: content-box;
+            box-sizing: border-box;
         }
 
         .swiper-slide {
@@ -374,16 +368,12 @@
             width: 100%;
             height: 100%;
             position: relative;
-            transition-property: transform;
         }
 
         .swiper-pagination {
             position: relative;
             bottom: auto;
             margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 8px;
         }
 
         .swiper-pagination-bullet {
@@ -391,9 +381,7 @@
             height: 10px;
             background: #d1d5db;
             opacity: 1;
-            border-radius: 50%;
             transition: all 0.3s ease;
-            cursor: pointer;
         }
 
         .swiper-pagination-bullet-active {
@@ -401,19 +389,7 @@
             transform: scale(1.2);
         }
 
-        /* Navigation buttons */
-        .promo-prev-btn,
-        .promo-next-btn {
-            transition: all 0.3s ease;
-        }
-
-        .promo-prev-btn:hover,
-        .promo-next-btn:hover {
-            background-color: #e5e7eb !important;
-        }
-
-        .promo-prev-btn.opacity-50,
-        .promo-next-btn.opacity-50 {
+        .swiper-button-disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
@@ -443,7 +419,7 @@
     <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize Promo Carousel
+            // Initialize Promo Carousel with autoplay
             const promoCarousel = new Swiper('.promo-carousel', {
                 slidesPerView: 1,
                 spaceBetween: 20,
@@ -456,6 +432,7 @@
                 pagination: {
                     el: '.swiper-pagination',
                     clickable: true,
+                    dynamicBullets: true,
                 },
                 navigation: {
                     nextEl: '.promo-next-btn',
@@ -464,16 +441,39 @@
                 breakpoints: {
                     640: {
                         slidesPerView: 2,
-                        spaceBetween: 20
                     },
                     1024: {
                         slidesPerView: 3,
-                        spaceBetween: 30
+                    }
+                },
+                on: {
+                    init: function() {
+                        toggleNavButtons(this);
+                    },
+                    slideChange: function() {
+                        toggleNavButtons(this);
                     }
                 }
             });
 
-            // Hover pause functionality
+            function toggleNavButtons(swiper) {
+                const prevBtn = document.querySelector('.promo-prev-btn');
+                const nextBtn = document.querySelector('.promo-next-btn');
+
+                if (swiper.isBeginning) {
+                    prevBtn.classList.add('swiper-button-disabled');
+                } else {
+                    prevBtn.classList.remove('swiper-button-disabled');
+                }
+
+                if (swiper.isEnd) {
+                    nextBtn.classList.add('swiper-button-disabled');
+                } else {
+                    nextBtn.classList.remove('swiper-button-disabled');
+                }
+            }
+
+            // Add hover pause to carousel
             const carouselContainer = document.querySelector('.promo-carousel-container');
             if (carouselContainer) {
                 carouselContainer.addEventListener('mouseenter', () => {
@@ -484,26 +484,22 @@
                 });
             }
 
-            // Disable/enable nav buttons based on position
-            function updateNavButtons() {
-                const prevBtn = document.querySelector('.promo-prev-btn');
-                const nextBtn = document.querySelector('.promo-next-btn');
+            // Animate elements on scroll
+            const animateOnScroll = () => {
+                const elements = document.querySelectorAll('.property-item, .promo-carousel-container');
 
-                if (!promoCarousel.isBeginning) {
-                    prevBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                } else {
-                    prevBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                }
+                elements.forEach(element => {
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const windowHeight = window.innerHeight;
 
-                if (!promoCarousel.isEnd) {
-                    nextBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                } else {
-                    nextBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                }
-            }
+                    if (elementPosition < windowHeight - 100) {
+                        element.classList.add('animate-fade-in');
+                    }
+                });
+            };
 
-            promoCarousel.on('init', updateNavButtons);
-            promoCarousel.on('slideChange', updateNavButtons);
+            window.addEventListener('scroll', animateOnScroll);
+            window.addEventListener('load', animateOnScroll);
         });
     </script>
 @endpush

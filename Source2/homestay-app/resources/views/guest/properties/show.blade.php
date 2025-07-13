@@ -1,4 +1,4 @@
-@extends('layouts.customer')
+@extends('layouts.guest')
 
 @section('title', $property->name)
 
@@ -6,9 +6,10 @@
     <!-- Hero Section -->
     <div class="relative bg-gray-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
             <!-- Back Button -->
-            <div class="flex justify-start mb-8">
-                <a href="{{ route('customer.properties.index') }}"
+            <div class="flex justify-start mb-8"> <!-- Container to align right -->
+                <a href="{{ route('guest.properties.index') }}"
                     class="inline-flex items-center border-2 border-gray-200 hover:border-red-300 px-5 py-2.5 rounded-lg transition-all duration-200 group bg-white shadow-sm hover:shadow-md">
                     <svg xmlns="http://www.w3.org/2000/svg"
                         class="h-5 w-5 mr-2 text-gray-600 group-hover:text-red-600 transition-transform group-hover:-translate-x-1"
@@ -24,27 +25,7 @@
             <!-- Property Header -->
             <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
                 <div>
-                    <div class="flex items-center gap-4 mb-2">
-                        <h1 class="text-3xl md:text-4xl font-bold text-gray-900">{{ $property->name }}</h1>
-
-                        <!-- Wishlist Button -->
-                        @auth
-                            @php
-                                $isWishlisted = auth()->user()->wishlists()->where('property_id', $property->id)->exists();
-                            @endphp
-                            <form method="POST" action="{{ route('customer.wishlist.store', $property->id) }}" class="wishlist-form">
-                                @csrf
-                                <button type="submit" class="p-1 rounded-full hover:bg-gray-100 transition-colors" title="{{ $isWishlisted ? 'Hapus dari Wishlist' : 'Tambahkan ke Wishlist' }}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 {{ $isWishlisted ? 'text-red-500 fill-current' : 'text-gray-400 fill-none' }}"
-                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                                    </svg>
-                                </button>
-                            </form>
-                        @endauth
-                    </div>
-
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">{{ $property->name }}</h1>
                     <div class="flex items-center text-gray-600">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-red-500" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
@@ -78,6 +59,7 @@
                     </div>
                 @endif
             </div>
+
         </div>
     </div>
 
@@ -340,25 +322,6 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    @push('styles')
-    <style>
-        .animate-ping {
-            animation: ping 0.5s cubic-bezier(0, 0, 0.2, 1);
-        }
-
-        @keyframes ping {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            75%, 100% {
-                transform: scale(1.5);
-                opacity: 0;
-            }
-        }
-    </style>
-    @endpush
-
     @push('scripts')
         <script>
             // Image Modal Functions
@@ -422,27 +385,6 @@
                             checkOutInput.value = '';
                         }
                     }
-                });
-
-                // Wishlist button animation
-                const wishlistForms = document.querySelectorAll('.wishlist-form');
-
-                wishlistForms.forEach(form => {
-                    form.addEventListener('submit', function(e) {
-                        e.preventDefault();
-
-                        const form = this;
-                        const button = form.querySelector('button');
-                        const heartIcon = form.querySelector('svg');
-
-                        // Add animation classes
-                        heartIcon.classList.add('animate-ping', 'scale-150');
-
-                        // Submit the form after animation
-                        setTimeout(() => {
-                            form.submit();
-                        }, 500);
-                    });
                 });
             });
         </script>

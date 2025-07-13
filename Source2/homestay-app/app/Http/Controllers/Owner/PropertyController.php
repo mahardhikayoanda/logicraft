@@ -13,7 +13,7 @@ class PropertyController extends Controller
 {
     public function index()
     {
-        $properties = Property::where('owner_id', Auth::id())->latest()->get();
+        $properties = Property::where('owner_id', Auth::id())->latest()->paginate(9);
         return view('owner.properties.index', compact('properties'));
     }
 
@@ -30,7 +30,9 @@ class PropertyController extends Controller
             'price_per_night'   => 'required|numeric',
             'location'          => 'required',
             'facilities'        => 'required',
-            'images.*'          => 'image|mimes:jpg,jpeg,png|max:2048'
+            'images.*'          => 'image|mimes:jpg,jpeg,png|max:5120',
+            'latitude'          => 'required|numeric',
+            'longitude'         => 'required|numeric'
         ]);
 
         $property = Property::create([
@@ -39,7 +41,9 @@ class PropertyController extends Controller
             'description'       => $request->description,
             'price_per_night'   => $request->price_per_night,
             'location'          => $request->location,
-            'facilities'        => $request->facilities
+            'facilities'        => $request->facilities,
+            'latitude'          => $request->latitude,
+            'longitude'         => $request->longitude
         ]);
 
         if ($request->hasFile('images')) {
@@ -71,10 +75,12 @@ class PropertyController extends Controller
             'price_per_night'   => 'required|numeric',
             'location'          => 'required',
             'facilities'        => 'required',
-            'images.*'          => 'image|mimes:jpg,jpeg,png|max:2048'
+            'images.*'          => 'image|mimes:jpg,jpeg,png|max:5120',
+            'latitude'          => 'required|numeric',
+            'longitude'         => 'required|numeric'
         ]);
 
-        $property->update($request->only(['name', 'description', 'price_per_night', 'location', 'facilities']));
+        $property->update($request->only(['name', 'description', 'price_per_night', 'location', 'facilities', 'latitude', 'longitude']));
 
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $imageFile) {

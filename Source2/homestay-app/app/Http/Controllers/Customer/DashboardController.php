@@ -31,10 +31,11 @@ class DashboardController extends Controller
 
         // Tambahan: ambil promosi aktif
         $today = now()->toDateString();
-        $promotions = Promotion::where('start_date', '<=', $today)
-                               ->where('end_date', '>=', $today)
+        $promotions = Promotion::where('start_date', '<=', now())
+                               ->where('end_date', '>=', now())
                                ->latest()
                                ->get();
+        // dd($promotions);
 
         return view('customer.dashboard', compact(
             'totalReservations',

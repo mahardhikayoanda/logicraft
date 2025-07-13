@@ -15,7 +15,7 @@ class PropertySeeder extends Seeder
 
         foreach ($owners as $owner) {
             // Buatkan 3 properti untuk setiap owner
-            Property::factory()->count(3)->create([
+            Property::factory()->count(20)->create([
                 'owner_id' => $owner->id,
             ]);
         }

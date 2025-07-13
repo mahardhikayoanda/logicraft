@@ -10,7 +10,7 @@ class CustomerPropertyController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Property::with('images'); // Load relasi gambar
+        $query = Property::query()->with('images'); // Mulai dengan query builder
 
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -20,14 +20,25 @@ class CustomerPropertyController extends Controller
             });
         }
 
-        $properties = $query->latest()->get();
+        $properties = $query->latest()->paginate(12); // Panggil paginate di akhir
 
         return view('customer.properties.index', compact('properties'));
     }
 
     public function show(Property $property)
     {
-        $property->load('images', 'reservations');
-        return view('customer.properties.show', compact('property'));
+        $property->load([
+            'images',
+            'reservations.review.customer'
+        ]);
+
+        // Ambil semua ulasan dari properti ini
+        $reviews = $property->reservations
+            ->pluck('review')
+            ->filter(); // Hilangkan null
+
+        $averageRating = $reviews->avg('rating');
+
+        return view('customer.properties.show', compact('property', 'averageRating', 'reviews'));
     }
 }
