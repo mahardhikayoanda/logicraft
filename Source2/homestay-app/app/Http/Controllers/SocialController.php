@@ -47,7 +47,8 @@ class SocialController extends Controller
             // Login user
             Auth::login($user);
 
-            return redirect('/dashboard'); // atau route yang kamu inginkan
+            // return redirect('/dashboard'); // atau route yang kamu inginkan
+            return redirect('/verify-email'); // atau route yang kamu inginkan
 
         } catch (\Exception $e) {
             return redirect('/login')->with('error', 'Gagal login dengan Google: ' . $e->getMessage());

@@ -39,6 +39,8 @@ use App\Http\Middleware\ResepsionisMiddleware;
 //Regits or Login with Google
 Route::get('auth/redirect', [SocialController::class, 'googleRedirect']);
 Route::get('auth/callback', [SocialController::class, 'loginWithGoogle']);
+
+//callback payment
 Route::post('reservations/payment-callback', [PaymentController::class, 'callback'])->name('reservations.callback');
 
 //Route guest
