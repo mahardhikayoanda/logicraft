@@ -1,6 +1,6 @@
 
 Deskripsi Singkat Proyek : 
-Lalok Sumbar merupakan sistem pemesanan dan promosi penginapan yang ada di sumatera barat
+Lalok Sumbar merupakan sistem pemesanan dan promosi penginapan yang ada di sumatera barat dengan mitra PT. Kreatif Amanah Bersama 
 
 Third Party/Library yang Digunakan :
 1. Leafleat
